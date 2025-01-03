@@ -1,16 +1,33 @@
-export const GET_IN_PROGRESS_TASKS = `
-  query GetTasks {
-    tasks(input: { status: IN_PROGRESS }) {
-      id
-      name
-      status
-      dueDate
-      pointEstimate
-      assignee {
-        fullName
-        email
-      }
-      tags
-    }
-  }
+import { gql } from '@apollo/client';
+
+export const GET_ALL_TASKS = gql`
+ query GetTasks {
+ tasks(input: {}) {
+   id
+   name
+   status
+   dueDate
+   pointEstimate
+   assignee {
+     fullName
+     email
+     avatar
+   }
+   tags
+ }
+ }
+`;
+
+export const GET_PROFILE = gql`
+ query GetProfile {
+   profile {
+     id
+     fullName
+     email
+     avatar
+     type
+     createdAt
+     updatedAt
+   }
+ }
 `;
