@@ -20,12 +20,10 @@ export const TaskCard = ({ task }: { task: Task }) => {
 
   const handleEdit = () => {
     console.log('Edit task:', task.id);
-
   };
 
   const handleDelete = () => {
     console.log('Delete task:', task.id);
-
   };
 
   return (
@@ -34,13 +32,15 @@ export const TaskCard = ({ task }: { task: Task }) => {
         <h3 className="font-medium text-neutral-1">{task.name}</h3>
         <TaskDropdown onEdit={handleEdit} onDelete={handleDelete} />
       </div>
-      <div className="mt-3 text-sm flex flex-col sm:flex-row items-start sm:items-center sm:justify-between gap-2">
-        <span className="text-neutral-1 h-8 flex items-center">
-          {formatPointEstimate(task.pointEstimate)}
-        </span>
-        <div className={`inline-flex items-center h-8 px-4 rounded py-1 gap-2 ${formatDueDate(task.dueDate).className}`}>
-          <i className="ri-alarm-line text-[24px]"></i>
-          <span className="whitespace-nowrap">{formatDueDate(task.dueDate).text}</span>
+      <div className="mt-3 text-sm flex flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-neutral-1 h-8 flex items-center">
+            {formatPointEstimate(task.pointEstimate)}
+          </span>
+          <div className={`inline-flex items-center h-8 px-4 rounded py-1 gap-2 ${formatDueDate(task.dueDate).className}`}>
+            <i className="ri-alarm-line text-[24px]"></i>
+            <span className="whitespace-nowrap">{formatDueDate(task.dueDate).text}</span>
+          </div>
         </div>
       </div>
       {task.tags.length > 0 && (
