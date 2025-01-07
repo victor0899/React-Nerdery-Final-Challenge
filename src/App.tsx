@@ -3,7 +3,7 @@ import { client } from './apollo/client';
 import { SearchProvider } from './context/searchContext';
 import { ViewProvider } from './context/viewContext';
 import { Sidebar } from './components/sidebar/Sidebar';
-import { AppHeader } from './components/appHeader/appHeader';
+import AppHeader from './components/appHeader/AppHeader';
 import DashboardCard from './components/Dashboard';
 
 function App() {
