@@ -5,17 +5,27 @@ import { TaskTag } from './taskTag';
 import { TaskDropdown } from './taskDropdown';
 
 export const TaskCard = ({ task }: { task: Task }) => {
-  const getAvatarUrl = (avatarUrl: string) => {
+  const getAvatarUrl = (avatarUrl: string | null | undefined) => {
+    if (!avatarUrl) {
+      return '/api/placeholder/32/32';
+    }
+
     if (avatarUrl.includes('avatars.dicebear.com/api/')) {
       const initials = avatarUrl.split('/').pop()?.replace('.svg', '') || 'gs';
       return `https://api.dicebear.com/7.x/initials/svg?seed=${initials}`;
     }
+
     return avatarUrl.startsWith('http') ? avatarUrl : `${import.meta.env.VITE_API_URL}${avatarUrl}`;
   };
 
+
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    console.error('Error loading avatar:', e);
-    (e.target as HTMLImageElement).src = '/api/placeholder/32/32';
+    const img = e.target as HTMLImageElement;
+
+    if (!img.src.includes('/placeholder/')) {
+      console.error('Error loading avatar, using placeholder');
+      img.src = '/api/placeholder/32/32';
+    }
   };
 
   const handleEdit = () => {
@@ -32,6 +42,7 @@ export const TaskCard = ({ task }: { task: Task }) => {
         <h3 className="font-medium text-neutral-1">{task.name}</h3>
         <TaskDropdown onEdit={handleEdit} onDelete={handleDelete} />
       </div>
+      
       <div className="mt-3 text-sm flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-neutral-1 h-8 flex items-center">
@@ -43,13 +54,15 @@ export const TaskCard = ({ task }: { task: Task }) => {
           </div>
         </div>
       </div>
-      {task.tags.length > 0 && (
+
+      {task.tags?.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-3">
           {task.tags.map(tag => (
             <TaskTag key={tag} tag={tag} />
           ))}
         </div>
       )}
+
       {task.assignee && (
         <div className="mt-2 flex justify-between items-center">
           <img
