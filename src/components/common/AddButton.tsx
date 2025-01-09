@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CreateTaskModal } from './createTaskModal'
+import TaskModal from './taskModal'
 
 export const AddButton = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -12,12 +12,13 @@ export const AddButton = () => {
         type="button"
         aria-label="Add Task"
       >
-        <i className="ri-add-line text-sm"></i>
+        <i className="ri-add-line w-6 h-6" style={{ width: '24px', height: '24px' }}></i>
       </button>
 
-      <CreateTaskModal 
+      <TaskModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
+        mode="create"
       />
     </>
   )
