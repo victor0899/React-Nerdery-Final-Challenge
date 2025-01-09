@@ -20,15 +20,17 @@ function App() {
               <div className="p-8">
                 <div className="flex flex-col md:flex-row gap-8">
                   <Sidebar />
-                  <main className="flex-1 w-full">
-                    <AppHeader />
-                    <Routes>
-                      <Route path="/dashboard" element={<DashboardCard />} />
-                      <Route path="/tasks" element={<MyTask />} />
-                      <Route path="/profile" element={<Profile />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                    </Routes>
+                  <main className="flex-1">
+                    <div className="w-full space-y-4">
+                      <AppHeader />
+                      <Routes>
+                        <Route path="/dashboard" element={<DashboardCard />} />
+                        <Route path="/tasks" element={<MyTask />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                      </Routes>
+                    </div>
                   </main>
                 </div>
               </div>
