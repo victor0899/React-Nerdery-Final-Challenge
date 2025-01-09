@@ -1,7 +1,5 @@
 import React from 'react';
 import { useSearch } from '../../../context/searchContext';
-import { ViewToggle } from '../../common/ViewToggle';
-import { AddButton } from '../../common/AddButton';
 import { SearchInput } from '../searchInput';
 import { ProfileAvatar } from '../profileAvatar';
 
@@ -16,7 +14,7 @@ export const AppHeader: React.FC = () => {
     <div className="relative w-full space-y-4">
       <header className="w-full">
         <div className="flex items-center justify-between w-full h-16 px-6 py-3 bg-neutral-4 rounded-2xl shadow-sm">
-          <SearchInput 
+          <SearchInput
             value={searchTerm}
             onChange={handleSearchChange}
           />
@@ -28,10 +26,8 @@ export const AppHeader: React.FC = () => {
           </div>
         </div>
       </header>
-      <div className="flex justify-between items-center px-6">
-        <ViewToggle />
-        <AddButton />
-      </div>
     </div>
   );
 };
+
+export default AppHeader;

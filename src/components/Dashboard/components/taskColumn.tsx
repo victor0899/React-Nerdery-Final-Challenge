@@ -17,15 +17,18 @@ export const TaskColumn = ({ title, tasks }: TaskColumnProps) => {
     : tasks;
 
   return (
-    <div className="bg-neutral-5 rounded-lg p-4">
-      <h2 className="text-lg font-semibold mb-4 text-neutral-1">
+    <div className="flex flex-col bg-neutral-5 rounded-lg p-4 h-[calc(100vh-48px)]">
+      <h2 className="text-lg font-semibold mb-4 text-neutral-1 flex-none">
         {title} ({filteredTasks.length})
       </h2>
-      <ul className="space-y-4">
-        {filteredTasks.map(task => (
-          <TaskCard key={task.id} task={task} />
-        ))}
-      </ul>
+      
+      <div className="overflow-y-auto flex-1" style={{ height: 'calc(100vh - 160px)' }}>
+        <ul className="space-y-4 pr-2">
+          {filteredTasks.map(task => (
+            <TaskCard key={task.id} task={task} />
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

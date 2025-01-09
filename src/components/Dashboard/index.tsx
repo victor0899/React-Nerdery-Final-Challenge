@@ -2,9 +2,12 @@ import { useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from './../graphql/queries';
 import { Task } from './types';
 import { TaskColumn } from './components/taskColumn';
+import { TaskList } from './components/taskList';
+import { useView } from '../../context/viewContext';
 
 const DashboardCard = () => {
   const { data, loading } = useQuery<{ tasks: Task[] }>(GET_ALL_TASKS);
+  const { view } = useView();
 
   const columns = [
     { id: 'BACKLOG', title: 'Backlog' },
@@ -18,8 +21,16 @@ const DashboardCard = () => {
 
   if (loading) return <div>Loading...</div>;
 
+  if (view === 'list') {
+    return (
+      <div className="p-6">
+        <TaskList tasks={data?.tasks || []} />
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6" style={{ height: '900px' }}>
       {columns.map(column => (
         <TaskColumn
           key={column.id}
