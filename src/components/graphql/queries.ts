@@ -31,3 +31,15 @@ export const GET_PROFILE = gql`
    }
  }
 `;
+
+export const GET_USERS = gql`
+  query GetUsers {
+    users {
+      id
+      fullName
+      email
+      avatar
+      type
+    }
+  }
+`;
