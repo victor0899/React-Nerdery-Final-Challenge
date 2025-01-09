@@ -3,7 +3,7 @@ import { useSearch } from '../../../context/searchContext';
 import { SearchInput } from '../searchInput';
 import { ProfileAvatar } from '../profileAvatar';
 
-export const AppHeader: React.FC = () => {
+export const MainHeader: React.FC = () => {
   const { searchTerm, setSearchTerm } = useSearch();
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,4 +30,4 @@ export const AppHeader: React.FC = () => {
   );
 };
 
-export default AppHeader;
+export default MainHeader;
