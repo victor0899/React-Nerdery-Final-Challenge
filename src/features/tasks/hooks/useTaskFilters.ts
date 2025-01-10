@@ -3,37 +3,50 @@ import { Task } from '../types/task.types';
 
 interface UseTaskFiltersProps {
   tasks: Task[];
-  searchTerm?: string;
-  status?: string;
 }
 
-export const useTaskFilters = ({ tasks, searchTerm, status }: UseTaskFiltersProps) => {
-  const filteredTasks = useMemo(() => {
-    let filtered = [...tasks];
+export const useTaskFilters = ({ tasks }: UseTaskFiltersProps) => {
+  const groupedTasks = useMemo(() => {
+    const backlogTasks = tasks.filter(task => task.status === 'BACKLOG');
+    const todoTasks = tasks.filter(task => task.status === 'TODO');
+    const inProgressTasks = tasks.filter(task => task.status === 'IN_PROGRESS');
+    const doneTasks = tasks.filter(task => task.status === 'DONE');
+    const cancelledTasks = tasks.filter(task => task.status === 'CANCELLED');
 
-    if (status) {
-      filtered = filtered.filter(task => task.status === status);
-    }
+    return {
+      backlog: backlogTasks,
+      todo: todoTasks,
+      inProgress: inProgressTasks,
+      done: doneTasks,
+      cancelled: cancelledTasks
+    };
+  }, [tasks]);
 
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(task => 
-        task.name.toLowerCase().includes(term)
-      );
-    }
+  const taskMetrics = useMemo(() => {
+    return {
+      totalTasks: tasks.length,
+      backlogTasks: groupedTasks.backlog.length,
+      todoTasks: groupedTasks.todo.length,
+      inProgressTasks: groupedTasks.inProgress.length,
+      doneTasks: groupedTasks.done.length,
+      cancelledTasks: groupedTasks.cancelled.length
+    };
+  }, [tasks, groupedTasks]);
 
-    return filtered;
-  }, [tasks, searchTerm, status]);
-
-  const groupedTasks = useMemo(() => ({
-    backlog: filteredTasks.filter(task => task.status === 'BACKLOG'),
-    todo: filteredTasks.filter(task => task.status === 'TODO'),
-    inProgress: filteredTasks.filter(task => task.status === 'IN_PROGRESS'),
-  }), [filteredTasks]);
+  const tasksDistribution = useMemo(() => {
+    const total = taskMetrics.totalTasks || 1; // Evitar división por cero
+    return {
+      backlogPercentage: (taskMetrics.backlogTasks / total) * 100,
+      todoPercentage: (taskMetrics.todoTasks / total) * 100,
+      inProgressPercentage: (taskMetrics.inProgressTasks / total) * 100,
+      donePercentage: (taskMetrics.doneTasks / total) * 100,
+      cancelledPercentage: (taskMetrics.cancelledTasks / total) * 100
+    };
+  }, [taskMetrics]);
 
   return {
-    filteredTasks,
     groupedTasks,
-    totalTasks: filteredTasks.length,
+    taskMetrics,
+    tasksDistribution
   };
 };

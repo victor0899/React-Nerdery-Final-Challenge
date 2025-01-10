@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Task } from '../../types/task.types';
 import { useTaskFilters } from '../../hooks/useTaskFilters';
-import { useSearch } from '../../../../shared/context';
 import { TaskTag } from '../shared/taskTag';
 import { formatDueDate, formatPointEstimate } from '../../utils/formatters';
 
@@ -10,7 +9,6 @@ interface TaskGroupProps {
   count: number;
   tasks: Task[];
 }
-
 const generateAvatarUrl = (name: string) => {
   const encodedName = encodeURIComponent(name);
   return `https://ui-avatars.com/api/?name=${encodedName}&background=random&color=fff&size=32&bold=true&format=png`;
@@ -82,8 +80,7 @@ const TaskRow = ({ task }: { task: Task }) => (
 );
 
 export const TaskList = ({ tasks }: { tasks: Task[] }) => {
-  const { searchTerm } = useSearch();
-  const { groupedTasks } = useTaskFilters({ tasks, searchTerm });
+  const { groupedTasks } = useTaskFilters({ tasks });
 
   return (
     <div className="w-full">

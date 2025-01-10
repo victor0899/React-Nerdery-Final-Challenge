@@ -2,11 +2,15 @@ import { useTasks } from '../hooks/useTasks';
 import { TaskColumn } from '../components/board/taskColumn';
 import { TaskList } from '../components/list/taskList';
 import { useView } from '../../../shared/context';
+import { useSearch } from '../../../shared/context';
 import TaskLayout from '../layout/taskLayout';
 import { TASK_COLUMNS } from '../constants/columns';
 
 const Dashboard = () => {
-  const { tasks, isLoading } = useTasks();
+  const { debouncedSearchTerm } = useSearch();
+  const { tasks, isLoading } = useTasks({ 
+    searchTerm: debouncedSearchTerm || undefined 
+  });
   const { view } = useView();
 
   if (isLoading) return <div>Loading...</div>;
@@ -18,7 +22,7 @@ const Dashboard = () => {
           <TaskList tasks={tasks} />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6 min-h-screen">
+        <div className="flex gap-8 w-full h-full">
           {TASK_COLUMNS.map(column => (
             <TaskColumn
               key={column.id}

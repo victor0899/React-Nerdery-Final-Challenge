@@ -7,9 +7,9 @@ interface TaskLayoutProps {
 
 export const TaskLayout = ({ children }: TaskLayoutProps) => {
   return (
-    <div className="flex flex-col h-full min-h-screen bg-neutral-5">
+    <div className="flex flex-col h-full">
       <ToolBar />
-      <div className="flex-1 p-4 lg:p-6 overflow-auto">
+      <div className="fixed top-48 main-container bottom-8 overflow-hidden">
         {children}
       </div>
     </div>

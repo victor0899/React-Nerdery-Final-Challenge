@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { NAVIGATION_ITEMS } from './constants';
 import { NavLink } from './components/navLink';
+import ravnLogo from '../../assets/ravn.svg';
+
+
 
 interface SidebarProps {
   className?: string;
@@ -115,37 +118,34 @@ export const Sidebar = ({ className = '' }: SidebarProps) => {
       </div>
 
       {/* Desktop Sidebar */}
-      <aside className={`hidden lg:flex flex-col w-[240px] min-h-screen bg-neutral-4 border-r border-neutral-3 ${className}`}>
-        <div className="p-6">
-          <img 
-            src="/assets/ravn.svg" 
-            alt="Ravn Logo" 
-            className="h-8"
-          />
-        </div>
-        
-        <nav className="flex-1 px-4 py-2 overflow-y-auto">
-          <ul className="space-y-2">
-            {NAVIGATION_ITEMS.map((item) => (
-              <li key={item.id}>
-                <NavLink
-                  href={item.href}
-                  icon={item.icon}
-                  label={item.label}
-                  isSelected={selectedItem === item.id}
-                  onClick={() => setSelectedItem(item.id)}
-                  isMobile={false}
-                />
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Optional: Footer section for desktop sidebar */}
-        <div className="p-4 border-t border-neutral-3">
-          {/* Add any footer content here */}
-        </div>
-      </aside>
+      <aside className={`hidden lg:block fixed w-[232px] h-[836px] top-8 left-8 bg-[#2C2F33] rounded-3xl py-3 ${className}`}>
+  <div className="flex flex-col">
+    <div className="flex justify-center pt-3">
+      <img 
+        src={ravnLogo} 
+        alt="Ravn Logo" 
+        className="h-8"
+      />
+    </div>
+    
+    <nav className="mt-11">
+      <ul className="space-y-2">
+        {NAVIGATION_ITEMS.map((item) => (
+          <li key={item.id}>
+            <NavLink
+              href={item.href}
+              icon={item.icon}
+              label={item.label}
+              isSelected={selectedItem === item.id}
+              onClick={() => setSelectedItem(item.id)}
+              isMobile={false}
+            />
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</aside>
     </>
   );
 };

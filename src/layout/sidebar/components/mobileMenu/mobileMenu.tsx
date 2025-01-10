@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink } from '../navLink';
 import { NAVIGATION_ITEMS } from '../../constants';
 
+
 export const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(NAVIGATION_ITEMS[0].id);
@@ -21,7 +22,7 @@ export const MobileMenu = () => {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-40 bg-neutral-5">
+        <div className="fixed inset-0 z-40 bg-neutral-5"> {/* Set to bg-neutral-5 */}
           <div className="flex flex-col h-full overflow-y-auto">
             <div className="sticky top-0 flex justify-between items-center p-4 bg-neutral-5">
               <img src="/assets/ravn.svg" alt="Ravn Logo" className="h-8" />

@@ -37,7 +37,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
 
   return (
     <>
-      <li className="bg-neutral-4 p-4 rounded shadow-sm">
+<li className="bg-neutral-4 p-4 rounded shadow-sm min-h-fit">
         <div className="flex justify-between items-start">
           <h3 className="font-medium text-neutral-1">{task.name}</h3>
           <TaskDropdown onEdit={handleEdit} onDelete={handleDelete} />
