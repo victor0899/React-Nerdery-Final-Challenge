@@ -43,3 +43,23 @@ export const GET_USERS = gql`
     }
   }
 `;
+
+
+export const GET_MY_TASKS = gql`
+  query Tasks($input: FilterTaskInput!) {
+    tasks(input: $input) {
+      id
+      name
+      status
+      dueDate
+      pointEstimate
+      assignee {
+        id
+        fullName
+        email
+        avatar
+      }
+      tags
+    }
+  }
+`;
