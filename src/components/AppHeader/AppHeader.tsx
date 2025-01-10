@@ -10,8 +10,8 @@ const AppHeader = () => {
   };
   
   return (
-    <div className="relative w-full space-y-4">
-      <header className="w-full">
+    <div className="relative w-full">
+      <header className="w-full mb-4">
         <div className="flex items-center justify-between w-full h-16 px-6 py-3 bg-neutral-4 rounded-2xl shadow-sm">
           <div className="flex items-center flex-1">
             <div className="flex items-center justify-center w-6 h-6 mr-6">
@@ -33,7 +33,9 @@ const AppHeader = () => {
           </div>
         </div>
       </header>
-      <ToolBar />
+      <div className="w-full px-6">
+        <ToolBar />
+      </div>
     </div>
   );
 };
