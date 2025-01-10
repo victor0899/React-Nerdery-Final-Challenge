@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { CREATE_TASK, UPDATE_TASK, DELETE_TASK } from '../graphql/mutations';
 import { GET_ALL_TASKS } from '../graphql/queries'; // Necesitaré ver este archivo
-import type { CreateTaskInput, UpdateTaskInput, DeleteTaskInput, Task } from '../types/task.types';
+import type { CreateTaskInput, UpdateTaskInput } from '../types/task.types';
 
 export const useTaskActions = () => {
   const [createTask, { loading: createLoading }] = useMutation(CREATE_TASK, {
