@@ -1,19 +1,14 @@
-import { useQuery } from '@apollo/client';
-import { GET_PROFILE } from '../features/tasks/graphql/queries';
-import type { ProfileData } from './types';
+import { User } from '../../types/profile.types';
 
-const Profile = () => {
-  const { data, loading, error } = useQuery<ProfileData>(GET_PROFILE);
+interface ProfileCardProps {
+  profile: User;
+}
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading profile</div>;
-
-  const profile = data?.profile;
-
+export const ProfileCard = ({ profile }: ProfileCardProps) => {
   return (
-    <div className="bg-neutral-4 rounded-lg shadow w-full mt-8">
+    <div className="bg-neutral-4 rounded-lg shadow w-full">
       <div className="flex flex-col md:flex-row">
-        {/* Left Section - 40% */}
+        {/* Left Section - Avatar and Name */}
         <div className="w-full md:w-2/5 p-6 flex flex-col items-center border-b md:border-b-0 md:border-r border-neutral-300">
           {profile?.avatar ? (
             <img
@@ -43,7 +38,7 @@ const Profile = () => {
           </a>
         </div>
 
-        {/* Right Section - 60% */}
+        {/* Right Section - Profile Info */}
         <div className="w-full md:w-3/5 p-6 space-y-6">
           <div>
             <p className="text-neutral-100 opacity-80 mb-1">User Type</p>
@@ -71,4 +66,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfileCard;

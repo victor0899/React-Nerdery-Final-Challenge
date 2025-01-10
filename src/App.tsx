@@ -1,40 +1,40 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { client } from './apollo/client';
-import { SearchProvider } from './context/searchContext';
-import { ViewProvider } from './context/viewContext';
-import { Sidebar } from './components/sidebar/Sidebar';
-import AppHeader from './components/appHeader/mainHeader';
-import DashboardCard from './components/Dashboard';
-import MyTask from './components/myTask';
-import Profile from './profile';
-import About from './components/about';
+import { client } from './config/apollo';
+import { SearchProvider } from './shared/context';
+import { ViewProvider } from './shared/context';
 
-function App() {
+// Layouts
+import { AppHeader } from './layout/appHeader/appHeader';
+import { Sidebar } from './layout/sidebar';
+
+// Views
+import Dashboard from './features/tasks/views/dashboard';
+import MyTasks from './features/tasks/views/myTasks';
+import Profile from './profile';
+import About from './features/about/views/about';
+import { Navigate } from 'react-router-dom';
+
+const App = () => {
+  
   return (
     <ApolloProvider client={client}>
-      <SearchProvider>
+      <SearchProvider>       {/* Asegurarnos que este provider esté antes de cualquier componente que use useSearch */}
         <ViewProvider>
           <BrowserRouter>
-            <div className="min-h-screen bg-neutral-5">
-              <div className="p-8">
-                <div className="flex flex-col md:flex-row gap-8">
-                  <Sidebar />
-                  <main className="flex-1">
-                    <div className="w-full">
-                      <AppHeader />
-                      <div className="mt-4">
-                        <Routes>
-                          <Route path="/dashboard" element={<DashboardCard />} />
-                          <Route path="/tasks" element={<MyTask />} />
-                          <Route path="/profile" element={<Profile />} />
-                          <Route path="/about" element={<About />} />
-                          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                        </Routes>
-                      </div>
-                    </div>
-                  </main>
-                </div>
+            <div className="flex h-screen bg-neutral-5">
+              <Sidebar />
+              <div className="flex flex-col flex-1 overflow-hidden">
+                <AppHeader />  {/* Este componente usa useSearch */}
+                <main className="flex-1 overflow-auto bg-neutral-5">
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/dashboard" element={<Navigate to="/" replace />} />
+                  <Route path="/my-tasks" element={<MyTasks />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/about" element={<About />} />
+               </Routes>
+                </main>
               </div>
             </div>
           </BrowserRouter>
@@ -42,6 +42,6 @@ function App() {
       </SearchProvider>
     </ApolloProvider>
   );
-}
+};
 
 export default App;
