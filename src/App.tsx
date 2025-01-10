@@ -4,7 +4,7 @@ import { client } from './apollo/client';
 import { SearchProvider } from './context/searchContext';
 import { ViewProvider } from './context/viewContext';
 import { Sidebar } from './components/sidebar/Sidebar';
-import AppHeader from './components/appHeader/AppHeader.tsx';
+import AppHeader from './components/appHeader/mainHeader';
 import DashboardCard from './components/Dashboard';
 import MyTask from './components/myTask';
 import Profile from './profile';
