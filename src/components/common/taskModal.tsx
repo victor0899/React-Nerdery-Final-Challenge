@@ -28,7 +28,6 @@ interface TaskModalProps {
   mode: 'create' | 'edit';
 }
 
-// Types
 type PointEstimate = 'ZERO' | 'ONE' | 'TWO' | 'FOUR' | 'EIGHT';
 type TaskStatus = 'BACKLOG' | 'TODO' | 'IN_PROGRESS' | 'CANCELLED' | 'DONE';
 type TaskTag = 'ANDROID' | 'IOS' | 'NODE_JS' | 'RAILS' | 'REACT';
@@ -140,25 +139,12 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, task, mod
     }
   };
 
-  const handleTagToggle = (tag: TaskTag) => {
-    setFormData(prev => ({
-      ...prev,
-      tags: prev.tags.includes(tag)
-        ? prev.tags.filter(t => t !== tag)
-        : [...prev.tags, tag]
-    }));
-  };
-
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-neutral-4 rounded-lg w-full max-w-lg p-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <h2 className="text-xl font-semibold text-neutral-1">
-            {mode === 'create' ? 'Create New Task' : 'Edit Task'}
-          </h2>
-          
+      <div className="bg-neutral-3 rounded-lg w-[572px] p-4 max-w-full">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {/* Task Title */}
           <div>
             <input
@@ -166,75 +152,123 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, task, mod
               placeholder="Task Title"
               value={formData.name}
               onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-              className="w-full bg-neutral-5 border-0 rounded-lg p-3 text-neutral-1 placeholder-neutral-2"
+              className="w-full bg-transparent border-0 rounded-lg p-3 text-neutral-1 placeholder-neutral-2 focus:outline-none focus:ring-0"
               required
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* Form Controls Row */}
+          <div className="grid grid-cols-4 gap-4 w-full max-w-[540px]">
             {/* Point Estimate */}
             <div>
-              <select
-                value={formData.pointEstimate}
-                onChange={e => setFormData(prev => ({ 
-                  ...prev, 
-                  pointEstimate: e.target.value as PointEstimate 
-                }))}
-                className="w-full bg-neutral-5 border-0 rounded-lg p-3 text-neutral-1"
-              >
-                {POINT_ESTIMATES.map(point => (
-                  <option key={point.value} value={point.value}>
-                    {point.label}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={formData.pointEstimate}
+                  onChange={e => setFormData(prev => ({ 
+                    ...prev, 
+                    pointEstimate: e.target.value as PointEstimate 
+                  }))}
+                  className="w-full bg-gray-500/10 border-0 rounded px-8 py-1 text-neutral-1 h-8 appearance-none gap-2 text-sm"
+                >
+                  <option value="" disabled selected>Estimate</option>
+                  {POINT_ESTIMATES.map(point => (
+                    <option key={point.value} value={point.value}>
+                      {point.label}
+                    </option>
+                  ))}
+                </select>
+                <i className="ri-increase-decrease-fill absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-1 text-lg"></i>
+              </div>
             </div>
 
             {/* Assignee */}
             <div>
-              <select
-                value={formData.assigneeId}
-                onChange={e => setFormData(prev => ({ ...prev, assigneeId: e.target.value }))}
-                className="w-full bg-neutral-5 border-0 rounded-lg p-3 text-neutral-1"
-                required
-              >
-                <option value="">Select Assignee</option>
-                {usersData?.users?.map((user: User) => (
-                  <option key={user.id} value={user.id}>
-                    {user.fullName}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={formData.assigneeId}
+                  onChange={e => setFormData(prev => ({ ...prev, assigneeId: e.target.value }))}
+                  className="w-full bg-gray-500/10 border-0 rounded px-4 py-1 text-neutral-1 h-8 appearance-none gap-2"
+                  required
+                >
+                  <option value="">Assignee</option>
+                  {usersData?.users?.map((user: User) => (
+                    <option key={user.id} value={user.id}>
+                      {user.fullName}
+                    </option>
+                  ))}
+                </select>
+                <i className="ri-user-fill absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-1 text-lg"></i>
+              </div>
+            </div>
+
+            {/* Tags dropdown */}
+            <div>
+              <div className="relative">
+                <select
+                  value=""
+                  onChange={(e) => {
+                    const selectedTag = e.target.value as TaskTag;
+                    setFormData(prev => ({
+                      ...prev,
+                      tags: prev.tags.includes(selectedTag)
+                        ? prev.tags.filter(t => t !== selectedTag)
+                        : [...prev.tags, selectedTag]
+                    }));
+                  }}
+                  className="w-full bg-gray-500/10 border-0 rounded px-4 py-1 text-neutral-1 h-8 appearance-none gap-2"
+                >
+                  <option value="">Label</option>
+                  {TAGS.map(tag => (
+                    <option 
+                      key={tag} 
+                      value={tag}
+                    >
+                      {tag.replace('_', ' ')} {formData.tags.includes(tag) ? '✓' : ''}
+                    </option>
+                  ))}
+                </select>
+                <i className="ri-price-tag-3-fill absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-1 text-lg"></i>
+              </div>
+            </div>
+
+            {/* Due Date */}
+            <div>
+              <div className="relative">
+                <input
+                  type="date"
+                  value={formData.dueDate}
+                  onChange={e => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
+                  className="w-full bg-gray-500/10 border-0 rounded px-4 py-1 text-neutral-1 h-8 appearance-none gap-2"
+                  required
+                  placeholder="Due Date"
+                />
+                <i className="ri-calendar-check-line absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-1 text-lg"></i>
+              </div>
             </div>
           </div>
 
-          {/* Tags */}
+          {/* Tags Display */}
           <div className="flex flex-wrap gap-2">
-            {TAGS.map(tag => (
-              <button
+            {formData.tags.map(tag => (
+              <span 
                 key={tag}
-                type="button"
-                onClick={() => handleTagToggle(tag)}
-                className={`px-4 py-2 rounded-lg text-sm ${
-                  formData.tags.includes(tag)
-                    ? 'bg-primary-4 text-white'
-                    : 'bg-neutral-5 text-neutral-1'
-                }`}
+                className="px-2 py-1 bg-primary-4 text-white text-sm rounded-lg flex items-center gap-2"
               >
                 {tag.replace('_', ' ')}
-              </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData(prev => ({
+                      ...prev,
+                      tags: prev.tags.filter(t => t !== tag)
+                    }));
+                  }}
+                  className="hover:text-neutral-2"
+                >
+                  ×
+                </button>
+              </span>
             ))}
-          </div>
-
-          {/* Due Date */}
-          <div>
-            <input
-              type="date"
-              value={formData.dueDate}
-              onChange={e => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
-              className="w-full bg-neutral-5 border-0 rounded-lg p-3 text-neutral-1"
-              required
-            />
           </div>
 
           {/* Status - Solo mostrar en edición */}
