@@ -30,7 +30,7 @@ const DashboardCard = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6" style={{ height: '900px' }}>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6 min-h-screen">
       {columns.map(column => (
         <TaskColumn
           key={column.id}
