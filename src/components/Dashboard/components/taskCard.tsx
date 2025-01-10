@@ -8,9 +8,14 @@ import TaskModal from '../../common/taskModal';
 import { DELETE_TASK } from '../../graphql/mutations';
 import { GET_ALL_TASKS } from '../../graphql/queries';
 
+const generateAvatarUrl = (name: string) => {
+  const encodedName = encodeURIComponent(name);
+  return `https://ui-avatars.com/api/?name=${encodedName}&background=random&color=fff&size=32&bold=true&format=png`;
+};
+
 export const TaskCard = ({ task }: { task: Task }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  
+
   const [deleteTask] = useMutation(DELETE_TASK, {
     refetchQueries: [{ query: GET_ALL_TASKS }],
     update(cache) {
@@ -60,7 +65,7 @@ export const TaskCard = ({ task }: { task: Task }) => {
           <h3 className="font-medium text-neutral-1">{task.name}</h3>
           <TaskDropdown onEdit={handleEdit} onDelete={handleDelete} />
         </div>
-        
+
         <div className="mt-3 text-sm flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-neutral-1 h-8 flex items-center">
@@ -84,13 +89,9 @@ export const TaskCard = ({ task }: { task: Task }) => {
         {task.assignee && (
           <div className="mt-2 flex justify-between items-center">
             <img
-              src={task.assignee.avatar || '/api/placeholder/32/32'}
+              src={generateAvatarUrl(task.assignee.fullName)}
               alt={task.assignee.fullName}
-              className="w-8 h-8 rounded-full object-cover"
-              onError={(e) => {
-                const img = e.target as HTMLImageElement;
-                img.src = '/api/placeholder/32/32';
-              }}
+              className="w-8 h-8 rounded-full"
             />
             <div className="flex items-center text-neutral-1">
               <i className="ri-attachment-2 text-lg"></i>
