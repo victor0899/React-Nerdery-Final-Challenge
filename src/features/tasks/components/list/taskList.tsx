@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Task } from '../../types/task.types';
+import { Task, UpdateTaskInput, CreateTaskInput } from '../../types/task.types';
 import { useTaskFilters } from '../../hooks/useTaskFilters';
 import { TaskTag } from '../shared/taskTag';
 import { formatDueDate, formatPointEstimate } from '../../utils/formatters';
@@ -9,6 +9,14 @@ interface TaskGroupProps {
   count: number;
   tasks: Task[];
 }
+
+interface TaskListProps {
+  tasks: Task[];
+  onDelete?: (id: string) => Promise<void>;
+  onUpdate?: (input: UpdateTaskInput) => Promise<void>;
+  onCreate?: (input: CreateTaskInput) => Promise<void>;
+}
+
 const generateAvatarUrl = (name: string) => {
   const encodedName = encodeURIComponent(name);
   return `https://ui-avatars.com/api/?name=${encodedName}&background=random&color=fff&size=32&bold=true&format=png`;
@@ -79,7 +87,8 @@ const TaskRow = ({ task }: { task: Task }) => (
   </div>
 );
 
-export const TaskList = ({ tasks }: { tasks: Task[] }) => {
+export const TaskList: React.FC<TaskListProps> = ({ 
+  tasks}) => {
   const { groupedTasks } = useTaskFilters({ tasks });
 
   return (

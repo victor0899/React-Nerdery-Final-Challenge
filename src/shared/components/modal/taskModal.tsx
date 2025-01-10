@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_USERS } from '../../../features/tasks/graphql/queries';
-import { useTaskActions } from '../../../features/tasks/hooks/useTaskActions';
-import type { Task, PointEstimate, TaskTag, CreateTaskInput } from '../../../features/tasks/types/task.types';
+import type { Task, PointEstimate, TaskTag, CreateTaskInput, UpdateTaskInput } from '../../../features/tasks/types/task.types';
 import CustomSelect from '../../components/dropdowns/customSelect';
 
 interface TaskModalProps {
@@ -10,6 +9,8 @@ interface TaskModalProps {
   onClose: () => void;
   task?: Task;
   mode: 'create' | 'edit';
+  onCreate?: (input: CreateTaskInput) => Promise<void>;
+  onUpdate?: (input: UpdateTaskInput) => Promise<void>;
 }
 
 interface User {
@@ -21,18 +22,18 @@ interface GetUsersQueryData {
   users: User[];
 }
 
-const TaskModal = ({ isOpen, onClose, task, mode }: TaskModalProps) => {
+const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModalProps) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<CreateTaskInput>({
     name: task?.name || '',
     assigneeId: task?.assignee?.id || '',
-    status: task?.status || 'TODO', // Valor predeterminado
-    pointEstimate: task?.pointEstimate || 'ZERO', // Valor predeterminado
+    status: task?.status || 'TODO',
+    pointEstimate: task?.pointEstimate || 'ZERO',
     dueDate: task?.dueDate || '',
     tags: task?.tags || []
   });
 
   const { data: usersData } = useQuery<GetUsersQueryData>(GET_USERS);
-  const { createTask, updateTask, isLoading } = useTaskActions();
 
   const pointEstimateOptions = [
     { value: 'ZERO', label: 'ZERO' },
@@ -70,23 +71,26 @@ const TaskModal = ({ isOpen, onClose, task, mode }: TaskModalProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const formattedData = {
         ...formData,
         dueDate: new Date(formData.dueDate + 'T00:00:00.000Z').toISOString(),
       };
 
-      if (mode === 'create') {
-        await createTask(formattedData);
-      } else {
-        await updateTask({
-          id: task!.id,
+      if (mode === 'create' && onCreate) {
+        await onCreate(formattedData);
+      } else if (mode === 'edit' && onUpdate && task) {
+        await onUpdate({
+          id: task.id,
           ...formattedData
         });
       }
       onClose();
     } catch (error) {
       console.error('Error saving task:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
