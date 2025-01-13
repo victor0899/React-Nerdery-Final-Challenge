@@ -8,9 +8,9 @@ export const ViewToggle: React.FC = () => {
     <div className="flex gap-2">
       <button
         onClick={() => setView('list')}
-        className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+        className={`w-10 h-10 p-2 rounded-lg flex items-center justify-center ${
           view === 'list'
-            ? 'border-2 border-primary-4 text-primary-4'
+            ? 'border border-primary-4 text-primary-4'
             : 'text-neutral-1 hover:bg-gray-100'
         }`}
         aria-label="Ver como lista"
@@ -19,9 +19,9 @@ export const ViewToggle: React.FC = () => {
       </button>
       <button
         onClick={() => setView('card')}
-        className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+        className={`w-10 h-10 p-2 rounded-lg flex items-center justify-center ${
           view === 'card'
-            ? 'border-2 border-primary-4 text-primary-4'
+            ? 'border border-primary-4 text-primary-4'
             : 'text-neutral-1 hover:bg-gray-100'
         }`}
         aria-label="Ver como cuadrícula"

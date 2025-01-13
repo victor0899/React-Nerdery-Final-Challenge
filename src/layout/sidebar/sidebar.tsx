@@ -29,12 +29,10 @@ export const Sidebar = ({ className = '' }: SidebarProps) => {
     }
   }, [location]);
 
-  // Manejar el cierre del menú móvil cuando cambia la ruta
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
-  // Prevenir el scroll cuando el menú móvil está abierto
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -54,10 +52,10 @@ export const Sidebar = ({ className = '' }: SidebarProps) => {
   return (
     <>
       {/* Mobile Header */}
-      <div className="sticky top-0 z-30 lg:hidden w-full bg-white border-b border-neutral-3">
+      <div className="sticky top-0 z-30 lg:hidden w-full bg-neutral-4 border-neutral-3">
         <div className="flex items-center justify-between px-4 py-3">
           <img 
-            src="/assets/ravn.svg" 
+           src="./src/assets/ravn.svg"
             alt="Ravn Logo" 
             className="h-8"
           />
@@ -118,34 +116,32 @@ export const Sidebar = ({ className = '' }: SidebarProps) => {
       </div>
 
       {/* Desktop Sidebar */}
-      <aside className={`hidden lg:block fixed w-[232px] h-[836px] top-8 left-8 bg-[#2C2F33] rounded-3xl py-3 ${className}`}>
-  <div className="flex flex-col">
-    <div className="flex justify-center pt-3">
-      <img 
-        src={ravnLogo} 
-        alt="Ravn Logo" 
-        className="h-8"
-      />
-    </div>
-    
-    <nav className="mt-11">
-      <ul className="space-y-2">
-        {NAVIGATION_ITEMS.map((item) => (
-          <li key={item.id}>
-            <NavLink
-              href={item.href}
-              icon={item.icon}
-              label={item.label}
-              isSelected={selectedItem === item.id}
-              onClick={() => setSelectedItem(item.id)}
-              isMobile={false}
-            />
-          </li>
-        ))}
-      </ul>
-    </nav>
-  </div>
-</aside>
+      <aside className={`hidden lg:flex flex-col w-[240px] h-[calc(100vh-64px)] bg-neutral-4  ml-8 mt-8 rounded-2xl ${className}`}>
+      <div className="p-6 flex justify-center items-center">
+          <img 
+            src="./src/assets/ravn.svg" 
+            alt="Ravn Logo" 
+            className="h-8"
+          />
+      </div>
+        
+        <nav className="flex-1 overflow-y-auto">
+          <ul className="space-y-2">
+            {NAVIGATION_ITEMS.map((item) => (
+              <li key={item.id}>
+                <NavLink
+                  href={item.href}
+                  icon={item.icon}
+                  label={item.label}
+                  isSelected={selectedItem === item.id}
+                  onClick={() => setSelectedItem(item.id)}
+                  isMobile={false}
+                />
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
     </>
   );
 };

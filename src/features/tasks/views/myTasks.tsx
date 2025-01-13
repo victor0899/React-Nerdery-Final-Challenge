@@ -30,7 +30,7 @@ const MyTasks = () => {
   }
 
   return (
-    <TaskLayout>
+    <TaskLayout> 
       {view === 'list' ? (
         <div className="p-6">
           <TaskList 
@@ -41,7 +41,7 @@ const MyTasks = () => {
           />
         </div>
       ) : (
-        <div className="flex gap-8 w-full h-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-screen">
           {columns.map(column => (
             <TaskColumn
               key={column.id}

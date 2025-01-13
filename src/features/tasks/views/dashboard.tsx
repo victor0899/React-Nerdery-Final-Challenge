@@ -22,7 +22,7 @@ const Dashboard = () => {
           <TaskList tasks={tasks} />
         </div>
       ) : (
-        <div className="flex gap-8 w-full h-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-screen">
           {TASK_COLUMNS.map(column => (
             <TaskColumn
               key={column.id}

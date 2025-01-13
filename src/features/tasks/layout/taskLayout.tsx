@@ -7,12 +7,10 @@ interface TaskLayoutProps {
 
 export const TaskLayout = ({ children }: TaskLayoutProps) => {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col  bg-neutral-5">
       <ToolBar />
-      <div className="fixed top-48 main-container bottom-8 overflow-hidden">
         {children}
       </div>
-    </div>
   );
 };
 export default TaskLayout;
