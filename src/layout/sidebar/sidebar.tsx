@@ -2,10 +2,6 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { NAVIGATION_ITEMS } from './constants';
 import { NavLink } from './components/navLink';
-import ravnLogo from '../../assets/ravn.svg';
-
-
-
 interface SidebarProps {
   className?: string;
 }

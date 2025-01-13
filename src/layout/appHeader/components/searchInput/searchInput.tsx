@@ -18,7 +18,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         placeholder={placeholder}
         className="w-full bg-transparent border-none outline-none text-neutral-2 placeholder-neutral-2 leading-6 text-base pl-16"
       />
-      <i className="ri-notification-3-line w-6 h-6 ml-6 text-neutral-2 text-2xl" />
     </div>
   );
 };

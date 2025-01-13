@@ -4,12 +4,8 @@ import { ProfileAvatar } from './components/profileAvatar';
 export const AppHeader = () => {
   return (
     <header className="flex items-center justify-between bg-neutral-4 px-6 py-3 border-b border-neutral-3 mt-8 rounded-2xl">
-        <SearchInput
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search"
-        />
-        <ProfileAvatar />
+      <SearchInput />
+      <ProfileAvatar />
     </header>
   );
 };

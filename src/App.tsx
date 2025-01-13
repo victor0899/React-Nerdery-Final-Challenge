@@ -3,8 +3,6 @@ import { ApolloProvider } from '@apollo/client';
 import { client } from './config/apollo';
 import { SearchProvider } from './shared/context';
 import { ViewProvider } from './shared/context';
-import { NotificationProvider } from './shared/context/notificationContext';
-import { Notifications } from './shared/components/notifications/notifications';
 import { AppHeader } from './layout/appHeader/appHeader';
 import { Sidebar } from './layout/sidebar';
 import Dashboard from './features/tasks/views/dashboard';
