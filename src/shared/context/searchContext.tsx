@@ -1,7 +1,10 @@
 import { createContext, useContext, useState } from 'react';
+import { useMemo } from 'react';
+import { useDebounce } from 'use-debounce';
 
 type SearchContextType = {
   searchTerm: string;
+  debouncedSearchTerm: string;
   setSearchTerm: (term: string) => void;
 };
 
@@ -9,9 +12,19 @@ const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 export const SearchProvider = ({ children }: { children: React.ReactNode }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
+
+  const value = useMemo(
+    () => ({
+      searchTerm,
+      debouncedSearchTerm,
+      setSearchTerm,
+    }),
+    [searchTerm, debouncedSearchTerm]
+  );
 
   return (
-    <SearchContext.Provider value={{ searchTerm, setSearchTerm }}>
+    <SearchContext.Provider value={value}>
       {children}
     </SearchContext.Provider>
   );

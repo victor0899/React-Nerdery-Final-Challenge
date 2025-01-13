@@ -1,16 +1,22 @@
 import { useQuery } from '@apollo/client';
 import { GET_PROFILE } from '../graphql/queries';
 import { useTasks } from '../hooks/useTasks';
+import { useTaskActions } from '../hooks/useTaskActions'; 
 import { TaskColumn } from '../components/board/taskColumn';
 import { TaskList } from '../components/list/taskList';
-import { useView } from '../../../shared/context';
-import TaskLayout from '../layout/taskLayout';  // Añade esta importación
+import { useView, useSearch } from '../../../shared/context';
+import TaskLayout from '../layout/taskLayout';
 
 const MyTasks = () => {
+  const { debouncedSearchTerm } = useSearch();
   const { data: profileData, loading: profileLoading } = useQuery(GET_PROFILE);
   const { tasks, isLoading } = useTasks({ 
-    assigneeId: profileData?.profile?.id 
+    assigneeId: profileData?.profile?.id,
+    searchTerm: debouncedSearchTerm || undefined
   });
+
+  const { deleteTask, createTask, updateTask } = useTaskActions(profileData?.profile?.id);
+
   const { view } = useView();
 
   const columns = [
@@ -24,18 +30,26 @@ const MyTasks = () => {
   }
 
   return (
-    <TaskLayout>  {/* Envuelve todo el contenido en TaskLayout */}
+    <TaskLayout> 
       {view === 'list' ? (
         <div className="p-6">
-          <TaskList tasks={tasks} />
+          <TaskList 
+            tasks={tasks} 
+            onDelete={deleteTask}
+            onUpdate={updateTask}
+            onCreate={createTask}
+          />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6 min-h-screen">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-screen">
           {columns.map(column => (
             <TaskColumn
               key={column.id}
               title={column.title}
               tasks={tasks.filter(task => task.status === column.id)}
+              onDelete={deleteTask}
+              onUpdate={updateTask}
+              onCreate={createTask}
             />
           ))}
         </div>

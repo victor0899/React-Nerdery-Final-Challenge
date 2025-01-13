@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { Task } from '../../types/task.types';
+import { Task, UpdateTaskInput, CreateTaskInput } from '../../types/task.types';
 import { formatDueDate, formatPointEstimate } from '../../utils/formatters';
 import { TaskTag } from './taskTag';
 import { TaskDropdown } from './taskDropdown';
-import { useTaskActions } from '../../hooks/useTaskActions';
 import TaskModal from '../../../../shared/components/modal/taskModal';
 
 interface TaskCardProps {
   task: Task;
+  onDelete?: (id: string) => Promise<void>;
+  onUpdate?: (input: UpdateTaskInput) => Promise<void>;
+  onCreate?: (input: CreateTaskInput) => Promise<void>;
 }
 
 const generateAvatarUrl = (name: string) => {
@@ -15,21 +17,22 @@ const generateAvatarUrl = (name: string) => {
   return `https://ui-avatars.com/api/?name=${encodedName}&background=random&color=fff&size=32&bold=true&format=png`;
 };
 
-export const TaskCard = ({ task }: TaskCardProps) => {
+export const TaskCard = ({ task, onDelete, onUpdate }: TaskCardProps) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const { deleteTask } = useTaskActions();
 
   const handleEdit = () => {
     setIsEditModalOpen(true);
   };
 
   const handleDelete = async () => {
+    if (!onDelete) return;
+    
     if (!confirm('Are you sure you want to delete this task?')) {
       return;
     }
 
     try {
-      await deleteTask(task.id);
+      await onDelete(task.id);
     } catch (error) {
       console.error('Error deleting task:', error);
     }
@@ -37,7 +40,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
 
   return (
     <>
-      <li className="bg-neutral-4 p-4 rounded shadow-sm">
+      <li className="bg-neutral-4 p-4 rounded shadow-sm min-h-fit">
         <div className="flex justify-between items-start">
           <h3 className="font-medium text-neutral-1">{task.name}</h3>
           <TaskDropdown onEdit={handleEdit} onDelete={handleDelete} />
@@ -84,6 +87,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
         onClose={() => setIsEditModalOpen(false)}
         task={task}
         mode="edit"
+        onUpdate={onUpdate}
       />
     </>
   );

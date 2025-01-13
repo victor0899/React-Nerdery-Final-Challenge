@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* En tu archivo index.css o un nuevo archivo de estilos */
+@media (max-width: 1440px) {
+  .header-container {
+    width: calc(100% - 328px);
+    left: 296px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header-container {
+    width: calc(100% - 32px);
+    left: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    width: calc(100% - 16px);
+    left: 8px;
+  }
+}
+
+/* En tu archivo de estilos */
+.main-container {
+  @media (max-width: 1440px) {
+    width: calc(100% - 328px);
+    left: 296px;
+  }
+
+  @media (max-width: 1024px) {
+    width: calc(100% - 32px);
+    left: 16px;
+  }
+
+  @media (max-width: 768px) {
+    width: calc(100% - 16px);
+    left: 8px;
+  }
+}
+

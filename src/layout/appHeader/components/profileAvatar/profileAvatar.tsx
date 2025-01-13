@@ -23,48 +23,55 @@ export const ProfileAvatar: React.FC = () => {
   const profile = data?.profile;
   const [avatarError, setAvatarError] = useState(false);
 
-  if (loading) {
-    return (
-      <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-2">
-        <div className="w-full h-full flex items-center justify-center text-neutral-4">
-          <i className="ri-loader-4-line animate-spin text-2xl" />
+  const renderAvatar = () => {
+    if (loading) {
+      return (
+        <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-2">
+          <div className="w-full h-full flex items-center justify-center text-neutral-4">
+            <i className="ri-loader-4-line animate-spin text-2xl" />
+          </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (!profile?.fullName) {
-    return (
-      <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-2">
-        <div className="w-full h-full flex items-center justify-center text-neutral-4">
-          <i className="ri-user-line text-2xl" />
+    if (!profile?.fullName) {
+      return (
+        <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-2">
+          <div className="w-full h-full flex items-center justify-center text-neutral-4">
+            <i className="ri-user-line text-2xl" />
+          </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  // Si hay un error con el avatar o no hay avatar, usar UI Avatars
-  if (avatarError || !profile.avatar) {
+    if (avatarError || !profile.avatar) {
+      return (
+        <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-2">
+          <img
+            src={generateAvatarUrl(profile.fullName)}
+            alt={profile.fullName}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      );
+    }
+
     return (
       <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-2">
         <img
-          src={generateAvatarUrl(profile.fullName)}
+          src={profile.avatar}
           alt={profile.fullName}
           className="w-full h-full object-cover"
+          onError={() => setAvatarError(true)}
         />
       </div>
     );
-  }
+  };
 
-  // Intentar usar el avatar de la API primero
   return (
-    <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-2">
-      <img
-        src={profile.avatar}
-        alt={profile.fullName}
-        className="w-full h-full object-cover"
-        onError={() => setAvatarError(true)}
-      />
+    <div className="flex items-center gap-4">
+      <i className="ri-notification-3-line text-neutral-2 text-2xl" />
+      {renderAvatar()}
     </div>
   );
 };

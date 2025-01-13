@@ -1,10 +1,14 @@
+// features/about/views/about.tsx
 import { AboutContent } from '../components/aboutContent';
+import { ContentLayout } from '../../../layout/contentLayout';
 
 const About = () => {
   return (
-    <div className="p-8">
-      <AboutContent />
-    </div>
+    <ContentLayout>
+      <div className="p-8">
+        <AboutContent />
+      </div>
+    </ContentLayout>
   );
 };
 
