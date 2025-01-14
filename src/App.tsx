@@ -10,6 +10,7 @@ import MyTasks from './features/tasks/views/myTasks';
 import Profile from './features/profile/views/profile';
 import About from './features/about/views/about';
 import { NotificationProvider } from './shared/context/notificationContext';
+import { Notifications } from './shared/components/notifications/notifications';
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
                   </Routes>
                 </div>
               </div>
+              <Notifications />
             </BrowserRouter>
           </ViewProvider>
         </SearchProvider>
