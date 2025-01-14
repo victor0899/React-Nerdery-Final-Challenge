@@ -7,6 +7,7 @@ import { TaskList } from '../components/list/taskList';
 import { useView, useSearch } from '../../../shared/context';
 import TaskLayout from '../layout/taskLayout';
 import type { TaskStatus } from '../types/task.types';
+import SpinnerContainer from '../../../shared/components/spinner/spinnerContainer';
 
 const MyTasks = () => {
   const { debouncedSearchTerm } = useSearch();
@@ -29,7 +30,7 @@ const MyTasks = () => {
   ];
 
   if (profileLoading || isLoading) {
-    return <div>Loading...</div>;
+    return <SpinnerContainer />;
   }
 
   return (
