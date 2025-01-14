@@ -107,8 +107,8 @@ export const TaskCard = ({ task, onDelete, onUpdate }: TaskCardProps) => {
             />
             <div className="flex items-center text-neutral-1">
               <i className="ri-attachment-2 text-lg"></i>
-              <i className="ri-node-tree text-lg ml-4"></i>
-              <i className="ri-chat-3-line text-lg ml-4"></i>
+              <i className="ri-node-tree text-lg ml-4">3</i>
+              <i className="ri-chat-3-line text-lg ml-4">5</i>
             </div>
           </div>
         )}

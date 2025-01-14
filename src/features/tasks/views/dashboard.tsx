@@ -45,7 +45,7 @@ const Dashboard = () => {
           <TaskList 
             tasks={tasks} 
             onUpdate={handleUpdateTask}
-            onDelete={handleDeleteTask} // Añadida prop onDelete
+            onDelete={handleDeleteTask} 
           />
         </div>
       ) : (
@@ -57,7 +57,7 @@ const Dashboard = () => {
               status={column.id}
               tasks={tasks.filter(task => task.status === column.id)}
               onUpdate={handleUpdateTask}
-              onDelete={handleDeleteTask} // Añadida prop onDelete
+              onDelete={handleDeleteTask} 
             />
           ))}
         </div>
