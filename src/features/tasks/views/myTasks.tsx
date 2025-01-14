@@ -6,6 +6,7 @@ import { TaskColumn } from '../components/board/taskColumn';
 import { TaskList } from '../components/list/taskList';
 import { useView, useSearch } from '../../../shared/context';
 import TaskLayout from '../layout/taskLayout';
+import type { TaskStatus } from '../types/task.types';
 
 const MyTasks = () => {
   const { debouncedSearchTerm } = useSearch();
@@ -19,7 +20,7 @@ const MyTasks = () => {
 
   const { view } = useView();
 
-  const columns = [
+  const columns: { id: TaskStatus; title: string }[] = [
     { id: 'BACKLOG', title: 'Backlog' },
     { id: 'TODO', title: 'To Do' },
     { id: 'IN_PROGRESS', title: 'In Progress' },
@@ -46,6 +47,7 @@ const MyTasks = () => {
             <TaskColumn
               key={column.id}
               title={column.title}
+              status={column.id} // Añadimos esta línea
               tasks={tasks.filter(task => task.status === column.id)}
               onDelete={deleteTask}
               onUpdate={updateTask}

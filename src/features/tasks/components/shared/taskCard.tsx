@@ -20,7 +20,19 @@ const generateAvatarUrl = (name: string) => {
 
 export const TaskCard = ({ task, onDelete, onUpdate }: TaskCardProps) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const { addNotification } = useNotification();
+
+  const handleDragStart = (e: React.DragEvent<HTMLLIElement>) => {
+    setIsDragging(true);
+    e.dataTransfer.setData('taskId', task.id);
+    e.dataTransfer.setData('sourceStatus', task.status);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
 
   const handleEdit = () => {
     setIsEditModalOpen(true);
@@ -57,7 +69,14 @@ export const TaskCard = ({ task, onDelete, onUpdate }: TaskCardProps) => {
 
   return (
     <>
-      <li className="bg-neutral-4 p-4 rounded shadow-sm min-h-fit">
+      <li 
+        className={`bg-neutral-4 p-4 rounded shadow-sm min-h-fit cursor-move transition-all
+          ${isDragging ? 'opacity-50 scale-95' : ''}
+        `}
+        draggable="true"
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
         <div className="flex justify-between items-start">
           <h3 className="font-medium text-neutral-1">{task.name}</h3>
           <TaskDropdown onEdit={handleEdit} onDelete={handleDelete} />

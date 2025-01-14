@@ -12,7 +12,7 @@ interface TaskModalProps {
   mode: 'create' | 'edit';
   onCreate?: (input: CreateTaskInput) => Promise<void>;
   onUpdate?: (input: UpdateTaskInput) => Promise<void>;
-  onError?: (error: string) => void; // Añadimos esta línea
+  onError?: (error: string) => void; 
 }
 
 interface User {
@@ -175,25 +175,37 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
             />
 
             {/* Due Date */}
-            <div
-              className="w-32 h-8 px-2 bg-neutral-2/10 rounded-lg flex items-center cursor-pointer"
-              onClick={() => {
-                const input = document.getElementById('dueDateInput') as HTMLInputElement;
-                input?.showPicker();
-              }}
-            >
-              <i className="ri-calendar-check-line mr-2"></i>
-              <span className="text-sm text-neutral-1 flex-grow">
-                {formData.dueDate ? new Date(formData.dueDate).toLocaleDateString() : 'Due Date'}
-              </span>
-              <input
-                id="dueDateInput"
-                type="date"
-                value={formData.dueDate}
-                onChange={(e) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
-                className="hidden"
-              />
-            </div>
+            <div className="relative w-32">
+                <div
+                  className="h-8 px-2 bg-neutral-2/10 rounded-lg flex items-center cursor-pointer"
+                  onClick={() => {
+                    const input = document.getElementById('dueDateInput') as HTMLInputElement;
+                    input?.showPicker();
+                  }}
+                >
+                  <i className="ri-calendar-check-line mr-2"></i>
+                  <span className="text-sm text-neutral-1 flex-grow">
+                    {formData.dueDate ? new Date(formData.dueDate).toLocaleDateString() : 'Due Date'}
+                  </span>
+                </div>
+                <input
+                  id="dueDateInput"
+                  type="date"
+                  value={formData.dueDate}
+                  onChange={(e) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
+                  className="absolute bottom-0 left-0 w-full h-8 opacity-0 [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-wrapper]:opacity-100"
+                  style={{
+                    position: 'absolute',
+                    clip: 'rect(0 0 0 0)',
+                    clipPath: 'inset(50%)',
+                    height: '1px',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    width: '1px'
+                  }}
+                />
+              </div>
+
           </div>
 
           {/* Action Buttons */}

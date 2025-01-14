@@ -5,6 +5,9 @@ import { useView } from '../../../shared/context';
 import { useSearch } from '../../../shared/context';
 import TaskLayout from '../layout/taskLayout';
 import { TASK_COLUMNS } from '../constants/columns';
+import { useTaskActions } from '../hooks/useTaskActions';
+import { useNotification } from '../../../shared/context/notificationContext';
+import { UpdateTaskInput } from '../types/task.types';
 
 const Dashboard = () => {
   const { debouncedSearchTerm } = useSearch();
@@ -12,6 +15,18 @@ const Dashboard = () => {
     searchTerm: debouncedSearchTerm || undefined 
   });
   const { view } = useView();
+  const { updateTask } = useTaskActions();
+  const { addNotification } = useNotification();
+
+  const handleUpdateTask = async (input: UpdateTaskInput) => {
+    try {
+      await updateTask(input);
+      addNotification('Task status updated successfully', 'success');
+    } catch (error) {
+      console.error('Error updating task:', error);
+      addNotification('Error updating task status. Please try again.', 'error');
+    }
+  };
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -27,7 +42,9 @@ const Dashboard = () => {
             <TaskColumn
               key={column.id}
               title={column.title}
+              status={column.id}
               tasks={tasks.filter(task => task.status === column.id)}
+              onUpdate={handleUpdateTask}
             />
           ))}
         </div>
