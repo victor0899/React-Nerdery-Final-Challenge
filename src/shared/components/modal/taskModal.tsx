@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
+import { createPortal } from 'react-dom';
 import { GET_USERS } from '../../../features/tasks/graphql/queries';
 import type { Task, PointEstimate, TaskTag, CreateTaskInput, UpdateTaskInput } from '../../../features/tasks/types/task.types';
 import CustomSelect from '../../components/dropdowns/customSelect';
@@ -74,7 +75,7 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    e.stopPropagation();
 
     const validationErrors: string[] = [];
 
@@ -126,11 +127,16 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-center justify-center">
-      <div className="bg-[#393D41] rounded-lg p-4 w-[572px]">
+  // Usar createPortal para renderizar fuera de la jerarquía del DOM
+  return createPortal(
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-center justify-center"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="bg-[#393D41] rounded-lg p-4 w-[572px]" onClick={(e) => e.stopPropagation()}>
         <form onSubmit={handleSubmit} className="space-y-2">
-          {/* Task Name Input */}
           <input
             type="text"
             value={formData.name}
@@ -139,9 +145,7 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
             placeholder="Task Title"
           />
 
-          {/* Controls Row */}
           <div className="flex justify-between space-x-2 mb-6">
-            {/* Point Estimate */}
             <CustomSelect
               options={pointEstimateOptions}
               value={formData.pointEstimate}
@@ -151,7 +155,6 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
               defaultValue="ZERO"
             />
 
-            {/* Assignee */}
             <CustomSelect
               options={userOptions}
               value={formData.assigneeId}
@@ -160,7 +163,6 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
               icon="ri-user-fill"
             />
 
-            {/* Tags */}
             <CustomSelect
               options={tagOptions}
               value={formData.tags[0] || ''}
@@ -174,45 +176,45 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
               defaultValue="REACT"
             />
 
-            {/* Due Date */}
             <div className="relative w-32">
-                <div
-                  className="h-8 px-2 bg-neutral-2/10 rounded-lg flex items-center cursor-pointer"
-                  onClick={() => {
-                    const input = document.getElementById('dueDateInput') as HTMLInputElement;
-                    input?.showPicker();
-                  }}
-                >
-                  <i className="ri-calendar-check-line mr-2"></i>
-                  <span className="text-sm text-neutral-1 flex-grow">
-                    {formData.dueDate ? new Date(formData.dueDate).toLocaleDateString() : 'Due Date'}
-                  </span>
-                </div>
-                <input
-                  id="dueDateInput"
-                  type="date"
-                  value={formData.dueDate}
-                  onChange={(e) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
-                  className="absolute bottom-0 left-0 w-full h-8 opacity-0 [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-wrapper]:opacity-100"
-                  style={{
-                    position: 'absolute',
-                    clip: 'rect(0 0 0 0)',
-                    clipPath: 'inset(50%)',
-                    height: '1px',
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                    width: '1px'
-                  }}
-                />
+              <div
+                className="h-8 px-2 bg-neutral-2/10 rounded-lg flex items-center cursor-pointer"
+                onClick={() => {
+                  const input = document.getElementById('dueDateInput') as HTMLInputElement;
+                  input?.showPicker();
+                }}
+              >
+                <i className="ri-calendar-check-line mr-2"></i>
+                <span className="text-sm text-neutral-1 flex-grow">
+                  {formData.dueDate ? new Date(formData.dueDate).toLocaleDateString() : 'Due Date'}
+                </span>
               </div>
-
+              <input
+                id="dueDateInput"
+                type="date"
+                value={formData.dueDate}
+                onChange={(e) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
+                className="absolute bottom-0 left-0 w-full h-8 opacity-0 [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-wrapper]:opacity-100"
+                style={{
+                  position: 'absolute',
+                  clip: 'rect(0 0 0 0)',
+                  clipPath: 'inset(50%)',
+                  height: '1px',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  width: '1px'
+                }}
+              />
+            </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex justify-end gap-4">
             <button
               type="button"
-              onClick={onClose}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
               className="px-4 py-2 text-neutral-2 hover:text-neutral-1"
             >
               Cancel
@@ -227,7 +229,8 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

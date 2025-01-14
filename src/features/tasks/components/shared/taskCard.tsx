@@ -35,11 +35,13 @@ export const TaskCard = ({ task, onDelete, onUpdate }: TaskCardProps) => {
     setIsDragging(false);
   };
 
-  const handleEdit = () => {
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsEditModalOpen(true);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!onDelete) return;
     
     if (!confirm('Are you sure you want to delete this task?')) {
@@ -70,6 +72,7 @@ export const TaskCard = ({ task, onDelete, onUpdate }: TaskCardProps) => {
         draggable="true"
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
+        onClick={(e) => e.stopPropagation()}
       >
         <motion.div
           layout
