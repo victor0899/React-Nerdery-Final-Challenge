@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { Task, UpdateTaskInput, CreateTaskInput } from '../../types/task.types';
 import { useTaskFilters } from '../../hooks/useTaskFilters';
@@ -42,7 +43,14 @@ const TaskRow = ({
   };
 
   return (
-    <div className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-neutral-3 border-b border-neutral-3">
+    <motion.div 
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 20 }}
+      whileHover={{ scale: 1.01 }}
+      transition={{ duration: 0.2 }}
+      className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-neutral-3 border-b border-neutral-3"
+    >
       <div className="col-span-4 flex items-center justify-between text-neutral-1 border-r border-neutral-3">
         <div className="flex items-center">
           <div className="w-1 h-full bg-green-500 mr-4"/>
@@ -57,13 +65,16 @@ const TaskRow = ({
           onDelete={handleDelete}
         />
       </div>
-      <div className="col-span-2 border-r border-neutral-3">
+      <motion.div 
+        layout
+        className="col-span-2 border-r border-neutral-3"
+      >
         <div className="flex flex-wrap gap-2">
           {task.tags.map(tag => (
             <TaskTag key={tag} tag={tag} />
           ))}
         </div>
-      </div>
+      </motion.div>
       <div className="col-span-1 text-neutral-1 border-r border-neutral-3">
         {formatPointEstimate(task.pointEstimate)}
       </div>
@@ -82,7 +93,7 @@ const TaskRow = ({
           {formatDueDate(task.dueDate).text}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -95,35 +106,53 @@ const TaskGroup = ({
   const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <div className="mb-4 border border-neutral-3 rounded-lg overflow-hidden">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="mb-4 border border-neutral-3 rounded-lg overflow-hidden"
+    >
       <div 
         className="flex items-center p-4 bg-neutral-4 cursor-pointer text-sm border-b border-neutral-3"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? (
-          <i className="ri-arrow-down-s-fill text-neutral-1" />
-        ) : (
-          <i className="ri-arrow-down-s-fill transform rotate-[-90deg] text-neutral-1" />
-        )}
+        <motion.i 
+          animate={{ rotate: isOpen ? 0 : -90 }}
+          transition={{ duration: 0.2 }}
+          className="ri-arrow-down-s-fill text-neutral-1" 
+        />
         <span className="ml-2 text-neutral-1 font-medium">{title}</span>
         <span className="ml-2 text-neutral-1">({count})</span>
       </div>
 
-      {isOpen && (
-        <div className="bg-neutral-4 border-t border-neutral-3">
-          <div className="divide-y divide-neutral-3">
-            {tasks.map((task) => (
-              <TaskRow 
-                key={task.id} 
-                task={task}
-                onDelete={onDelete}
-                onUpdate={onUpdate}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="bg-neutral-4 border-t border-neutral-3"
+          >
+            <motion.div 
+              className="divide-y divide-neutral-3"
+              layout
+            >
+              <AnimatePresence mode="popLayout">
+                {tasks.map((task) => (
+                  <TaskRow 
+                    key={task.id} 
+                    task={task}
+                    onDelete={onDelete}
+                    onUpdate={onUpdate}
+                  />
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
@@ -136,40 +165,43 @@ export const TaskList: React.FC<TaskListProps> = ({
   const { groupedTasks } = useTaskFilters({ tasks });
 
   return (
-    <div className="w-full">
-      <div className="grid grid-cols-12 gap-4 px-4 py-3 text-sm text-neutral-1 bg-neutral-4 mb-4 border border-neutral-3 rounded-lg">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="w-full"
+    >
+      <motion.div 
+        layout
+        className="grid grid-cols-12 gap-4 px-4 py-3 text-sm text-neutral-1 bg-neutral-4 mb-4 border border-neutral-3 rounded-lg"
+      >
         <div className="col-span-4 border-r border-neutral-3"># Task Name</div>
         <div className="col-span-2 border-r border-neutral-3">Task Tags</div>
         <div className="col-span-1 border-r border-neutral-3">Estimate</div>
         <div className="col-span-2 border-r border-neutral-3">Task Assign Name</div>
         <div className="col-span-3">Due Date</div>
-      </div>
+      </motion.div>
 
-      <TaskGroup 
-        title="Backlog" 
-        count={groupedTasks.backlog.length} 
-        tasks={groupedTasks.backlog}
-        onDelete={onDelete}
-        onUpdate={onUpdate}
-        onCreate={onCreate}
-      />
-      <TaskGroup 
-        title="To Do" 
-        count={groupedTasks.todo.length} 
-        tasks={groupedTasks.todo}
-        onDelete={onDelete}
-        onUpdate={onUpdate}
-        onCreate={onCreate}
-      />
-      <TaskGroup 
-        title="In Progress" 
-        count={groupedTasks.inProgress.length} 
-        tasks={groupedTasks.inProgress}
-        onDelete={onDelete}
-        onUpdate={onUpdate}
-        onCreate={onCreate}
-      />
-    </div>
+      <AnimatePresence mode="popLayout">
+        {Object.entries({
+          "Backlog": groupedTasks.backlog,
+          "To Do": groupedTasks.todo,
+          "In Progress": groupedTasks.inProgress,
+          "Done": groupedTasks.done,
+          "Cancelled": groupedTasks.cancelled
+        }).map(([title, tasks]) => (
+          <TaskGroup 
+            key={title}
+            title={title}
+            count={tasks.length}
+            tasks={tasks}
+            onDelete={onDelete}
+            onUpdate={onUpdate}
+            onCreate={onCreate}
+          />
+        ))}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

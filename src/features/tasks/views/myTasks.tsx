@@ -24,6 +24,8 @@ const MyTasks = () => {
     { id: 'BACKLOG', title: 'Backlog' },
     { id: 'TODO', title: 'To Do' },
     { id: 'IN_PROGRESS', title: 'In Progress' },
+    { id: 'DONE', title: 'Done' },
+    { id: 'CANCELLED', title: 'Cancelled' }
   ];
 
   if (profileLoading || isLoading) {
@@ -42,7 +44,7 @@ const MyTasks = () => {
           />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-screen">
+<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 min-h-screen">
           {columns.map(column => (
             <TaskColumn
               key={column.id}

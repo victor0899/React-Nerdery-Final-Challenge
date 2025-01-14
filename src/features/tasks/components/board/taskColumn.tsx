@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from 'framer-motion';
 import { Task, UpdateTaskInput, CreateTaskInput, TaskStatus } from '../../types/task.types';
 import { TaskCard } from '../shared/taskCard';
 
@@ -41,35 +42,61 @@ export const TaskColumn = ({
       });
     }
   };
+
   return (
-    <div 
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
       className="w-full min-w-[250px] flex flex-col bg-neutral-w rounded-lg p-4 h-[calc(100vh-180px)]"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     > 
-      <div className="flex items-center justify-between mb-4">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex items-center justify-between mb-4"
+      >
         <h2 className="text-lg font-semibold text-neutral-1">
           {title} ({tasks.length})
         </h2>
-      </div>
+      </motion.div>
       
       <div className="flex-1 overflow-hidden"> 
         <div className="h-full overflow-y-auto pr-2"> 
-          <ul className="space-y-4 pb-4">
-            {tasks.map(task => (
-              <TaskCard 
-                key={task.id} 
-                task={task}
-                onDelete={onDelete}
-                onUpdate={onUpdate}
-                onCreate={onCreate}
-              />
-            ))}
-          </ul>
+          <AnimatePresence mode="popLayout">
+            <motion.ul 
+              className="space-y-4 pb-4"
+              layout
+            >
+              {tasks.map(task => (
+                <motion.div
+                  key={task.id}
+                  layout
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 25,
+                    duration: 0.3
+                  }}
+                >
+                  <TaskCard 
+                    task={task}
+                    onDelete={onDelete}
+                    onUpdate={onUpdate}
+                    onCreate={onCreate}
+                  />
+                </motion.div>
+              ))}
+            </motion.ul>
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
