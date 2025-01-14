@@ -1,6 +1,6 @@
 export const AboutContent = () => {
   return (
-    <div className="bg-neutral-4 rounded-lg shadow p-8 max-w-4xl mx-auto h-[70vh] overflow-y-auto">
+    <div className="bg-neutral-4 rounded-lg shadow p-8 w-full mx-auto h-[90vh] overflow-y-auto">
       <h1 className="text-3xl font-bold text-neutral-1 mb-6">Final Challenge</h1>
 
       <div className="space-y-6 text-neutral-1">

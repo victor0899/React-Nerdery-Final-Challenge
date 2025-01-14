@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import { GET_USERS } from '../../../features/tasks/graphql/queries';
 import type { Task, PointEstimate, TaskTag, CreateTaskInput, UpdateTaskInput } from '../../../features/tasks/types/task.types';
 import CustomSelect from '../../components/dropdowns/customSelect';
+import { useNotification } from '../../../shared/context/notificationContext';
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface TaskModalProps {
   mode: 'create' | 'edit';
   onCreate?: (input: CreateTaskInput) => Promise<void>;
   onUpdate?: (input: UpdateTaskInput) => Promise<void>;
+  onError?: (error: string) => void; 
 }
 
 interface User {
@@ -23,14 +25,15 @@ interface GetUsersQueryData {
 }
 
 const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModalProps) => {
+  const { addNotification } = useNotification();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<CreateTaskInput>({
-    name: task?.name || '',
-    assigneeId: task?.assignee?.id || '',
-    status: task?.status || 'TODO',
-    pointEstimate: task?.pointEstimate || 'ZERO',
-    dueDate: task?.dueDate || '',
-    tags: task?.tags || []
+    name: '',
+    assigneeId: '',
+    status: 'BACKLOG',  
+    pointEstimate: 'ZERO',  
+    dueDate: '',
+    tags: ['REACT'] 
   });
 
   const { data: usersData } = useQuery<GetUsersQueryData>(GET_USERS);
@@ -61,8 +64,8 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
       setFormData({
         name: task.name,
         assigneeId: task.assignee.id,
-        status: task.status || 'TODO',
-        pointEstimate: task.pointEstimate || 'ZERO',
+        status: task.status,
+        pointEstimate: task.pointEstimate,
         dueDate: task.dueDate.split('T')[0],
         tags: task.tags
       });
@@ -71,6 +74,33 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+
+    const validationErrors: string[] = [];
+
+    if (!formData.name.trim()) {
+      validationErrors.push('Task name is required');
+    }
+    
+    if (!formData.pointEstimate) {
+      validationErrors.push('Point estimate is required');
+    }
+
+    if (!formData.tags.length) {
+      validationErrors.push('At least one tag is required');
+    }
+
+    if (!formData.dueDate) {
+      validationErrors.push('Due date is required');
+    }
+
+    if (validationErrors.length > 0) {
+      validationErrors.forEach(error => {
+        addNotification(error, 'error');
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const formattedData = {
@@ -107,7 +137,6 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
             onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
             className="w-[540px] h-8 px-4 py-2 bg-transparent border border-neutral-3 rounded-lg text-neutral-1"
             placeholder="Task Title"
-            required
           />
 
           {/* Controls Row */}
@@ -119,6 +148,7 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
               onChange={(value) => setFormData(prev => ({ ...prev, pointEstimate: value as PointEstimate }))}
               placeholder="Estimate"
               icon="ri-increase-decrease-fill"
+              defaultValue="ZERO"
             />
 
             {/* Assignee */}
@@ -134,32 +164,48 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
             <CustomSelect
               options={tagOptions}
               value={formData.tags[0] || ''}
-              onChange={(value) => setFormData(prev => ({ ...prev, tags: value ? [value as TaskTag] : [] }))}
+              onChange={(value) => {
+                if (value) {
+                  setFormData(prev => ({ ...prev, tags: [value as TaskTag] }))
+                }
+              }}
               placeholder="Label"
               icon="ri-price-tag-3-fill"
+              defaultValue="REACT"
             />
 
             {/* Due Date */}
-            <div
-              className="w-32 h-8 px-2 bg-neutral-2/10 rounded-lg flex items-center cursor-pointer"
-              onClick={() => {
-                const input = document.getElementById('dueDateInput') as HTMLInputElement;
-                input?.showPicker();
-              }}
-            >
-              <i className="ri-calendar-check-line mr-2"></i>
-              <span className="text-sm text-neutral-1 flex-grow">
-                {formData.dueDate ? new Date(formData.dueDate).toLocaleDateString() : 'Due Date'}
-              </span>
-              <input
-                id="dueDateInput"
-                type="date"
-                value={formData.dueDate}
-                onChange={(e) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
-                className="hidden"
-                required
-              />
-            </div>
+            <div className="relative w-32">
+                <div
+                  className="h-8 px-2 bg-neutral-2/10 rounded-lg flex items-center cursor-pointer"
+                  onClick={() => {
+                    const input = document.getElementById('dueDateInput') as HTMLInputElement;
+                    input?.showPicker();
+                  }}
+                >
+                  <i className="ri-calendar-check-line mr-2"></i>
+                  <span className="text-sm text-neutral-1 flex-grow">
+                    {formData.dueDate ? new Date(formData.dueDate).toLocaleDateString() : 'Due Date'}
+                  </span>
+                </div>
+                <input
+                  id="dueDateInput"
+                  type="date"
+                  value={formData.dueDate}
+                  onChange={(e) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
+                  className="absolute bottom-0 left-0 w-full h-8 opacity-0 [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-wrapper]:opacity-100"
+                  style={{
+                    position: 'absolute',
+                    clip: 'rect(0 0 0 0)',
+                    clipPath: 'inset(50%)',
+                    height: '1px',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    width: '1px'
+                  }}
+                />
+              </div>
+
           </div>
 
           {/* Action Buttons */}

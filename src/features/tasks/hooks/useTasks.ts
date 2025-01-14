@@ -1,8 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../graphql/queries';
 import type { Task, TaskStatus } from '../types/task.types';
-
-// features/tasks/hooks/useTasks.ts
 interface UseTasksOptions {
   assigneeId?: string;
   status?: TaskStatus;

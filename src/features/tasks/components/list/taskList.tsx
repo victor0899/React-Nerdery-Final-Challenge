@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { Task, UpdateTaskInput, CreateTaskInput } from '../../types/task.types';
 import { useTaskFilters } from '../../hooks/useTaskFilters';
 import { TaskTag } from '../shared/taskTag';
+import { TaskDropdown } from '../shared/taskDropdown';
 import { formatDueDate, formatPointEstimate } from '../../utils/formatters';
 
 interface TaskGroupProps {
   title: string;
   count: number;
   tasks: Task[];
+  onDelete?: (id: string) => Promise<void>;
+  onUpdate?: (input: UpdateTaskInput) => Promise<void>;
+  onCreate?: (input: CreateTaskInput) => Promise<void>;
 }
 
 interface TaskListProps {
@@ -22,7 +26,72 @@ const generateAvatarUrl = (name: string) => {
   return `https://ui-avatars.com/api/?name=${encodedName}&background=random&color=fff&size=32&bold=true&format=png`;
 };
 
-const TaskGroup = ({ title, count, tasks }: TaskGroupProps) => {
+const TaskRow = ({ 
+  task, 
+  onDelete, 
+  onUpdate 
+}: { 
+  task: Task;
+  onDelete?: (id: string) => Promise<void>;
+  onUpdate?: (input: UpdateTaskInput) => Promise<void>;
+}) => {
+  const handleDelete = async () => {
+    if (onDelete && window.confirm('Are you sure you want to delete this task?')) {
+      await onDelete(task.id);
+    }
+  };
+
+  return (
+    <div className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-neutral-3 border-b border-neutral-3">
+      <div className="col-span-4 flex items-center justify-between text-neutral-1 border-r border-neutral-3">
+        <div className="flex items-center">
+          <div className="w-1 h-full bg-green-500 mr-4"/>
+          {task.name}
+        </div>
+        <TaskDropdown 
+          onEdit={() => {
+            if (onUpdate) {
+              onUpdate({ id: task.id, status: task.status });
+            }
+          }} 
+          onDelete={handleDelete}
+        />
+      </div>
+      <div className="col-span-2 border-r border-neutral-3">
+        <div className="flex flex-wrap gap-2">
+          {task.tags.map(tag => (
+            <TaskTag key={tag} tag={tag} />
+          ))}
+        </div>
+      </div>
+      <div className="col-span-1 text-neutral-1 border-r border-neutral-3">
+        {formatPointEstimate(task.pointEstimate)}
+      </div>
+      <div className="col-span-2 text-neutral-1 border-r border-neutral-3">
+        <div className="flex items-center">
+          <img
+            src={generateAvatarUrl(task.assignee.fullName)}
+            alt={task.assignee.fullName}
+            className="w-8 h-8 rounded-full mr-2"
+          />
+          <span>{task.assignee.fullName}</span>
+        </div>
+      </div>
+      <div className="col-span-3">
+        <div className={`inline-flex items-center px-3 py-1 rounded ${formatDueDate(task.dueDate).className}`}>
+          {formatDueDate(task.dueDate).text}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TaskGroup = ({ 
+  title, 
+  count, 
+  tasks,
+  onDelete,
+  onUpdate}: TaskGroupProps) => {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -44,7 +113,12 @@ const TaskGroup = ({ title, count, tasks }: TaskGroupProps) => {
         <div className="bg-neutral-4 border-t border-neutral-3">
           <div className="divide-y divide-neutral-3">
             {tasks.map((task) => (
-              <TaskRow key={task.id} task={task} />
+              <TaskRow 
+                key={task.id} 
+                task={task}
+                onDelete={onDelete}
+                onUpdate={onUpdate}
+              />
             ))}
           </div>
         </div>
@@ -53,42 +127,12 @@ const TaskGroup = ({ title, count, tasks }: TaskGroupProps) => {
   );
 };
 
-const TaskRow = ({ task }: { task: Task }) => (
-  <div className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-neutral-3 border-b border-neutral-3">
-    <div className="col-span-4 flex items-center text-neutral-1 border-r border-neutral-3">
-      <div className="w-1 h-full bg-green-500 mr-4"/>
-      {task.name}
-    </div>
-    <div className="col-span-2 border-r border-neutral-3">
-      <div className="flex flex-wrap gap-2">
-        {task.tags.map(tag => (
-          <TaskTag key={tag} tag={tag} />
-        ))}
-      </div>
-    </div>
-    <div className="col-span-1 text-neutral-1 border-r border-neutral-3">
-      {formatPointEstimate(task.pointEstimate)}
-    </div>
-    <div className="col-span-2 text-neutral-1 border-r border-neutral-3">
-      <div className="flex items-center">
-        <img
-          src={generateAvatarUrl(task.assignee.fullName)}
-          alt={task.assignee.fullName}
-          className="w-8 h-8 rounded-full mr-2"
-        />
-        <span>{task.assignee.fullName}</span>
-      </div>
-    </div>
-    <div className="col-span-3">
-      <div className={`inline-flex items-center px-3 py-1 rounded ${formatDueDate(task.dueDate).className}`}>
-        {formatDueDate(task.dueDate).text}
-      </div>
-    </div>
-  </div>
-);
-
 export const TaskList: React.FC<TaskListProps> = ({ 
-  tasks}) => {
+  tasks,
+  onDelete,
+  onUpdate,
+  onCreate
+}) => {
   const { groupedTasks } = useTaskFilters({ tasks });
 
   return (
@@ -101,9 +145,30 @@ export const TaskList: React.FC<TaskListProps> = ({
         <div className="col-span-3">Due Date</div>
       </div>
 
-      <TaskGroup title="Backlog" count={groupedTasks.backlog.length} tasks={groupedTasks.backlog} />
-      <TaskGroup title="To Do" count={groupedTasks.todo.length} tasks={groupedTasks.todo} />
-      <TaskGroup title="In Progress" count={groupedTasks.inProgress.length} tasks={groupedTasks.inProgress} />
+      <TaskGroup 
+        title="Backlog" 
+        count={groupedTasks.backlog.length} 
+        tasks={groupedTasks.backlog}
+        onDelete={onDelete}
+        onUpdate={onUpdate}
+        onCreate={onCreate}
+      />
+      <TaskGroup 
+        title="To Do" 
+        count={groupedTasks.todo.length} 
+        tasks={groupedTasks.todo}
+        onDelete={onDelete}
+        onUpdate={onUpdate}
+        onCreate={onCreate}
+      />
+      <TaskGroup 
+        title="In Progress" 
+        count={groupedTasks.inProgress.length} 
+        tasks={groupedTasks.inProgress}
+        onDelete={onDelete}
+        onUpdate={onUpdate}
+        onCreate={onCreate}
+      />
     </div>
   );
 };

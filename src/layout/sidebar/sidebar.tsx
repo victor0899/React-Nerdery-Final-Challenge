@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { NAVIGATION_ITEMS } from './constants';
 import { NavLink } from './components/navLink';
+import ravnLogo from '../../assets/ravn.svg'
+
 interface SidebarProps {
   className?: string;
 }
@@ -50,11 +52,7 @@ export const Sidebar = ({ className = '' }: SidebarProps) => {
       {/* Mobile Header */}
       <div className="sticky top-0 z-30 lg:hidden w-full bg-neutral-4 border-neutral-3">
         <div className="flex items-center justify-between px-4 py-3">
-          <img 
-           src="./src/assets/ravn.svg"
-            alt="Ravn Logo" 
-            className="h-8"
-          />
+        <img src={ravnLogo} alt="Ravn Logo" />
           <button
             onClick={toggleMobileMenu}
             className="p-2 text-neutral-2 hover:text-neutral-1 focus:outline-none"
@@ -114,11 +112,7 @@ export const Sidebar = ({ className = '' }: SidebarProps) => {
       {/* Desktop Sidebar */}
       <aside className={`hidden lg:flex flex-col w-[240px] h-[calc(100vh-64px)] bg-neutral-4  ml-8 mt-8 rounded-2xl ${className}`}>
       <div className="p-6 flex justify-center items-center">
-          <img 
-            src="./src/assets/ravn.svg" 
-            alt="Ravn Logo" 
-            className="h-8"
-          />
+      <img src={ravnLogo} alt="Ravn Logo" />
       </div>
         
         <nav className="flex-1 overflow-y-auto">

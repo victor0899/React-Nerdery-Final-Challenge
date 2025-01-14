@@ -12,13 +12,28 @@ interface CustomSelectProps {
   placeholder: string;
   icon?: string;
   className?: string;
+  defaultValue?: string;
 }
 
-const CustomSelect = ({ options, value, onChange, placeholder, icon, className = '' }: CustomSelectProps) => {
+const CustomSelect = ({ 
+  options, 
+  value, 
+  onChange, 
+  placeholder, 
+  icon, 
+  className = '',
+  defaultValue 
+}: CustomSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
 
   const selectedOption = options.find(option => option.value === value);
+
+  useEffect(() => {
+    if (defaultValue && !value) {
+      onChange(defaultValue);
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
