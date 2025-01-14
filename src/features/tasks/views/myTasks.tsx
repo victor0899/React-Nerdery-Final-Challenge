@@ -47,7 +47,7 @@ const MyTasks = () => {
             <TaskColumn
               key={column.id}
               title={column.title}
-              status={column.id} // Añadimos esta línea
+              status={column.id}
               tasks={tasks.filter(task => task.status === column.id)}
               onDelete={deleteTask}
               onUpdate={updateTask}

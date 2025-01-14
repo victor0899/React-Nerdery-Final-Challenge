@@ -34,7 +34,7 @@ export const useTaskFilters = ({ tasks }: UseTaskFiltersProps) => {
   }, [tasks, groupedTasks]);
 
   const tasksDistribution = useMemo(() => {
-    const total = taskMetrics.totalTasks || 1; // Evitar división por cero
+    const total = taskMetrics.totalTasks || 1; 
     return {
       backlogPercentage: (taskMetrics.backlogTasks / total) * 100,
       todoPercentage: (taskMetrics.todoTasks / total) * 100,
