@@ -1,8 +1,17 @@
 import { useState } from 'react'
 import TaskModal from '../modal/taskModal'
+import { useTaskActions } from '../../../features/tasks/hooks/useTaskActions';
+import { useQuery } from '@apollo/client';
+import { GET_PROFILE } from '../../../features/tasks/graphql/queries';
 
 export const AddButton = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const { data: profileData } = useQuery(GET_PROFILE);
+  const { createTask } = useTaskActions(profileData?.profile?.id);
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -17,8 +26,9 @@ export const AddButton = () => {
 
       <TaskModal
         isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        onClose={handleClose}
         mode="create"
+        onCreate={createTask}
       />
     </>
   )

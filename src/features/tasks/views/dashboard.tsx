@@ -18,7 +18,7 @@ const Dashboard = () => {
   return (
     <TaskLayout>
       {view === 'list' ? (
-        <div className="p-6">
+        <div className="py-6">
           <TaskList tasks={tasks} />
         </div>
       ) : (
