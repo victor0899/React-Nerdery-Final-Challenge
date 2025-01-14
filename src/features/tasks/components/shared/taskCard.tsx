@@ -47,10 +47,8 @@ export const TaskCard = ({ task, onDelete, onUpdate }: TaskCardProps) => {
 
     try {
       await onDelete(task.id);
-      addNotification('Task deleted successfully', 'success');
     } catch (error) {
       console.error('Error deleting task:', error);
-      addNotification('Error deleting task. Please try again.', 'error');
     }
   };
 
@@ -58,12 +56,10 @@ export const TaskCard = ({ task, onDelete, onUpdate }: TaskCardProps) => {
     try {
       if (onUpdate) {
         await onUpdate(input);
-        addNotification('Task updated successfully', 'success');
         setIsEditModalOpen(false);
       }
     } catch (error) {
       console.error('Error updating task:', error);
-      addNotification('Error updating task. Please try again.', 'error');
     }
   };
 

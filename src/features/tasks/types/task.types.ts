@@ -19,21 +19,21 @@ export interface Task {
 
 export interface CreateTaskInput {
   name: string;
-  assigneeId: string;  // Cambiado de assignee a assigneeId para coincidir con el schema
+  assigneeId: string;  
   dueDate: string;
-  pointEstimate: PointEstimate;  // Cambiado de string a PointEstimate
-  status: TaskStatus;  // Cambiado de string a TaskStatus
-  tags: TaskTag[];  // Cambiado de string[] a TaskTag[]
+  pointEstimate: PointEstimate;  
+  status: TaskStatus;  
+  tags: TaskTag[]; 
 }
 
 export interface UpdateTaskInput {
   id: string;
   name?: string;
-  assigneeId?: string;  // Cambiado de assignee a assigneeId
+  assigneeId?: string;  
   dueDate?: string;
-  pointEstimate?: PointEstimate;  // Cambiado de string a PointEstimate
-  status?: TaskStatus;  // Cambiado de string a TaskStatus
-  tags?: TaskTag[];  // Cambiado de string[] a TaskTag[]
+  pointEstimate?: PointEstimate;  
+  status?: TaskStatus; 
+  tags?: TaskTag[];  
 }
 
 export interface DeleteTaskInput {

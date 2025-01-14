@@ -15,7 +15,7 @@ const Dashboard = () => {
     searchTerm: debouncedSearchTerm || undefined 
   });
   const { view } = useView();
-  const { updateTask } = useTaskActions();
+  const { updateTask, deleteTask } = useTaskActions(); 
   const { addNotification } = useNotification();
 
   const handleUpdateTask = async (input: UpdateTaskInput) => {
@@ -28,13 +28,25 @@ const Dashboard = () => {
     }
   };
 
+  const handleDeleteTask = async (id: string) => {
+    try {
+      await deleteTask(id);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };
+
   if (isLoading) return <div>Loading...</div>;
 
   return (
     <TaskLayout>
       {view === 'list' ? (
         <div className="py-6">
-          <TaskList tasks={tasks} />
+          <TaskList 
+            tasks={tasks} 
+            onUpdate={handleUpdateTask}
+            onDelete={handleDeleteTask} // Añadida prop onDelete
+          />
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-screen">
@@ -45,6 +57,7 @@ const Dashboard = () => {
               status={column.id}
               tasks={tasks.filter(task => task.status === column.id)}
               onUpdate={handleUpdateTask}
+              onDelete={handleDeleteTask} // Añadida prop onDelete
             />
           ))}
         </div>
