@@ -125,9 +125,35 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
     }
   };
 
-  if (!isOpen) return null;
+  const handleAssigneeChange = (value: string | string[]) => {
+    if (typeof value === 'string') {
+      setFormData(prev => ({
+        ...prev,
+        assigneeId: value
+      }));
+    }
+  };
 
-  // Usar createPortal para renderizar fuera de la jerarquía del DOM
+  const handlePointEstimateChange = (value: string | string[]) => {
+    if (typeof value === 'string') {
+      setFormData(prev => ({
+        ...prev,
+        pointEstimate: value as PointEstimate
+      }));
+    }
+  };
+
+  const handleTagsChange = (value: string | string[]) => {
+    if (Array.isArray(value)) {
+      setFormData(prev => ({
+        ...prev,
+        tags: value as TaskTag[]
+      }));
+    }
+  };
+
+  if (!isOpen) return null;
+  
   return createPortal(
     <div 
       className="fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-center justify-center"
@@ -149,7 +175,7 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
             <CustomSelect
               options={pointEstimateOptions}
               value={formData.pointEstimate}
-              onChange={(value) => setFormData(prev => ({ ...prev, pointEstimate: value as PointEstimate }))}
+              onChange={handlePointEstimateChange}
               placeholder="Estimate"
               icon="ri-increase-decrease-fill"
               defaultValue="ZERO"
@@ -158,22 +184,19 @@ const TaskModal = ({ isOpen, onClose, task, mode, onCreate, onUpdate }: TaskModa
             <CustomSelect
               options={userOptions}
               value={formData.assigneeId}
-              onChange={(value) => setFormData(prev => ({ ...prev, assigneeId: value }))}
+              onChange={handleAssigneeChange}
               placeholder="Assignee"
               icon="ri-user-fill"
             />
 
             <CustomSelect
               options={tagOptions}
-              value={formData.tags[0] || ''}
-              onChange={(value) => {
-                if (value) {
-                  setFormData(prev => ({ ...prev, tags: [value as TaskTag] }))
-                }
-              }}
-              placeholder="Label"
+              value={formData.tags}
+              onChange={handleTagsChange}
+              placeholder="Labels"
               icon="ri-price-tag-3-fill"
-              defaultValue="REACT"
+              isMulti={true}
+              defaultValue={['REACT']}
             />
 
             <div className="relative w-32">
