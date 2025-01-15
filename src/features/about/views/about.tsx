@@ -1,4 +1,3 @@
-// features/about/views/about.tsx
 import { AboutContent } from '../components/aboutContent';
 import { ContentLayout } from '../../../layout/contentLayout';
 

@@ -8,6 +8,7 @@ import { TASK_COLUMNS } from '../constants/columns';
 import { useTaskActions } from '../hooks/useTaskActions';
 import { useNotification } from '../../../shared/context/notificationContext';
 import { UpdateTaskInput } from '../types/task.types';
+import SpinnerContainer from '../../../shared/components/spinner/spinnerContainer';
 
 const Dashboard = () => {
   const { debouncedSearchTerm } = useSearch();
@@ -36,7 +37,7 @@ const Dashboard = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <SpinnerContainer />;
 
   return (
     <TaskLayout>
@@ -45,11 +46,11 @@ const Dashboard = () => {
           <TaskList 
             tasks={tasks} 
             onUpdate={handleUpdateTask}
-            onDelete={handleDeleteTask} // Añadida prop onDelete
+            onDelete={handleDeleteTask} 
           />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-screen">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 min-h-screen">
           {TASK_COLUMNS.map(column => (
             <TaskColumn
               key={column.id}
@@ -57,7 +58,7 @@ const Dashboard = () => {
               status={column.id}
               tasks={tasks.filter(task => task.status === column.id)}
               onUpdate={handleUpdateTask}
-              onDelete={handleDeleteTask} // Añadida prop onDelete
+              onDelete={handleDeleteTask} 
             />
           ))}
         </div>

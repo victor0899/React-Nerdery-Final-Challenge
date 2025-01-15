@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 interface TaskDropdownProps {
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit: (e: React.MouseEvent) => void;
+  onDelete: (e: React.MouseEvent) => void;
 }
 
-export const TaskDropdown: React.FC<TaskDropdownProps> = ({ onEdit, onDelete }) => {
+export const TaskDropdown = ({ onEdit, onDelete }: TaskDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -17,36 +17,49 @@ export const TaskDropdown: React.FC<TaskDropdownProps> = ({ onEdit, onDelete }) 
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
+
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen(!isOpen);
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEdit(e);
+    setIsOpen(false);
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete(e);
+    setIsOpen(false);
+  };
 
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-[18px] h-4 hover:bg-neutral-3 rounded transition-colors"
+        onClick={handleToggle}
+        className="p-1 hover:bg-neutral-3/20 rounded-full transition-colors"
       >
-        <i className="ri-more-fill text-neutral-2 text-base leading-none"></i>
+        <i className="ri-more-2-fill text-[20px] text-neutral-2 hover:text-neutral-1"></i>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-1 w-36 p-2 bg-neutral-3 rounded-lg border border-neutral-2 shadow-lg z-10 flex flex-col gap-2">
+        <div className="absolute right-0 mt-1 bg-neutral-4 border border-neutral-3 rounded-lg shadow-lg z-10 min-w-[120px] py-1">
           <button
-            onClick={() => {
-              onEdit();
-              setIsOpen(false);
-            }}
-            className="w-full px-4 py-2 text-left text-sm hover:bg-neutral-4 flex items-center gap-2 rounded-lg text-neutral-1"
+            onClick={handleEdit}
+            className="w-full px-4 py-2 text-left text-sm hover:bg-neutral-3/20 text-neutral-1 flex items-center gap-2"
           >
-            <i className="ri-pencil-line"></i>
+            <i className="ri-edit-line"></i>
             Edit
           </button>
           <button
-            onClick={() => {
-              onDelete();
-              setIsOpen(false);
-            }}
-            className="w-full px-4 py-2 text-left text-sm hover:bg-primary-4/50 flex items-center gap-2 text-neutral-1 rounded-lg"
+            onClick={handleDelete}
+            className="w-full px-4 py-2 text-left text-sm hover:bg-neutral-3/20 text-red-500 flex items-center gap-2"
           >
             <i className="ri-delete-bin-line"></i>
             Delete

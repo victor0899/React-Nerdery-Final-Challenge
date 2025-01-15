@@ -2,13 +2,13 @@ import { NavigationItem } from "../types";
 export const NAVIGATION_ITEMS: NavigationItem[] = [
     {
       id: 'dashboard',
-      href: '/',             // Changed from /dashboard
+      href: '/',            
       icon: 'ri-function-line',
       label: 'DASHBOARD'
     },
     {
       id: 'tasks',
-      href: '/my-tasks',     // Changed from /tasks
+      href: '/my-tasks',    
       icon: 'ri-menu-line',
       label: 'MY TASK'
     },

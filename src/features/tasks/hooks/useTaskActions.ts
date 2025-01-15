@@ -63,7 +63,6 @@ export const useTaskActions = (assigneeId?: string) => {
       addNotification('Task created successfully!', 'success');
       return result.data.createTask;
     } catch (error) {
-      // El error ya se maneja en onError del mutation
       throw error;
     }
   };
@@ -76,7 +75,6 @@ export const useTaskActions = (assigneeId?: string) => {
       addNotification('Task updated successfully!', 'success');
       return result.data.updateTask;
     } catch (error) {
-      // El error ya se maneja en onError del mutation
       throw error;
     }
   };
@@ -88,7 +86,6 @@ export const useTaskActions = (assigneeId?: string) => {
       });
       addNotification('Task deleted successfully!', 'success');
     } catch (error) {
-      // El error ya se maneja en onError del mutation
       throw error;
     }
   };

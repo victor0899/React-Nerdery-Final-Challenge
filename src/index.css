@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* En tu archivo index.css o un nuevo archivo de estilos */
 @media (max-width: 1440px) {
   .header-container {
     width: calc(100% - 328px);
@@ -24,7 +23,6 @@
   }
 }
 
-/* En tu archivo de estilos */
 .main-container {
   @media (max-width: 1440px) {
     width: calc(100% - 328px);

@@ -6,10 +6,9 @@ interface ProfileCardProps {
 
 export const ProfileCard = ({ profile }: ProfileCardProps) => {
   return (
-    <div className="bg-neutral-4 rounded-lg shadow max-w-4xl mx-auto"> {/* Añadido max-w-4xl y mx-auto */}
+    <div className="bg-neutral-4 rounded-lg shadow max-w-4xl mx-auto">
       <div className="flex flex-col md:flex-row">
-        {/* Left Section - Avatar and Name */}
-        <div className="w-full md:w-2/5 p-8 flex flex-col items-center border-b md:border-b-0 md:border-r border-neutral-300"> {/* Cambiado p-6 a p-8 para coincidir */}
+        <div className="w-full md:w-2/5 p-8 flex flex-col items-center border-b md:border-b-0 md:border-r border-neutral-300"> 
           {profile?.avatar ? (
             <img
               src={profile.avatar}
@@ -38,8 +37,7 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
           </a>
         </div>
 
-        {/* Right Section - Profile Info */}
-        <div className="w-full md:w-3/5 p-8 space-y-6"> {/* Cambiado p-6 a p-8 para coincidir */}
+        <div className="w-full md:w-3/5 p-8 space-y-6"> 
           <div>
             <p className="text-neutral-100 opacity-80 mb-1">User Type</p>
             <p className="text-neutral-100 font-medium">

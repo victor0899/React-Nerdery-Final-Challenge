@@ -13,7 +13,6 @@ const Profile = () => {
   return (
     <div className="bg-neutral-4 rounded-lg shadow w-full mt-8">
       <div className="flex flex-col md:flex-row">
-        {/* Left Section - 40% */}
         <div className="w-full md:w-2/5 p-6 flex flex-col items-center border-b md:border-b-0 md:border-r border-neutral-300">
           {profile?.avatar ? (
             <img
@@ -43,7 +42,6 @@ const Profile = () => {
           </a>
         </div>
 
-        {/* Right Section - 60% */}
         <div className="w-full md:w-3/5 p-6 space-y-6">
           <div>
             <p className="text-neutral-100 opacity-80 mb-1">User Type</p>
